@@ -1,29 +1,95 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter import filedialog
+import japanize_kivy
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.clock import Clock
+from kivy.config import Config
 
-from solve import *
-from api import *
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 
-def gui_start(token):
-  root = Tk()
-  frm = ttk.Frame(root, padding=10)
-  frm.grid()
-  ttk.Label(frm, text="Hello, world").grid(column=0, row=0)
+from datetime import datetime
 
-  # pick file
-  file_path = ""
-  def file_picker_temp():
-    file_path = filedialog.askopenfilename(initialdir="~")
-  ttk.Button(frm, text="Pick file", command=file_picker_temp).grid(column=0, row=1)
+from .solve import *
+from .api import *
 
-  # solve
-  ans = []
-  ttk.Button(frm, text="Solve", command=lambda: ans = solve(file_path)).grid(column=1, row=1)
+token = ""
 
-  # submit
-  ttk.Button(frm, text="Send", command=lambda: send(token, ans)).grid(column=2, row=1)
+Config.set("graphics", "resizable", "0")
 
-  # main loop
-  ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=2)
-  root.mainloop()
+Builder.load_string("""
+<StrongButton@Button>:
+  font_name: "assets/Roboto-Bold.ttf"
+  font_size: 20
+
+<UITop>:
+  size_hint_y: 0.2
+  BoxLayout:
+    orientation: "vertical"
+    Label:
+      text: "現在時刻"
+    Label:
+      id: clock
+      size: self.texture_size
+      font_name: "assets/Roboto-Bold.ttf"
+      font_size: 42
+      bold: True
+  StrongButton:
+    size_hint_x: 0.4
+    text: "Reload"
+
+<UIMiddle>:
+  Button:
+    text: "ここはマニュアル回答用の何か"
+
+<UIBottom>:
+  size_hint_y: 0.3
+  Label:
+    text: "ここに現在の回答が入る"
+  StrongButton:
+    size_hint_x: 0.2
+    text: "Submit"
+""")
+
+class ProconApp(App):
+  def __init__(self, _token, **kwargs):
+    super().__init__(**kwargs)
+    global token
+    token = _token
+
+  def build(self):
+    return ProconUI()
+
+class ProconUI(BoxLayout):
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    self.orientation = "vertical"
+    self.spacing = 4
+    self.add_widget(UITop())
+    self.add_widget(UIMiddle())
+    self.add_widget(UIBottom())
+
+class UITop(BoxLayout):
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    Clock.schedule_interval(self.update_clocks, 0.01)
+
+  def update_clocks(self, _):
+    local = datetime.now()
+    evenSec = local.second % 2
+    self.ids.clock.text = \
+      ("0" + str(local.hour))[-2:]    + \
+      (":" if evenSec else " ")       + \
+      ("0" + str(local.minute))[-2:]  + \
+      (":" if evenSec else " ")       + \
+      ("0" + str(local.second))[-2:]  + \
+      ("." if evenSec else " ")       + \
+      ("00" + str(local.microsecond))[-3:]
+
+class UIMiddle(BoxLayout):
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+
+class UIBottom(BoxLayout):
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)

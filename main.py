@@ -7,7 +7,7 @@ def main():
     print("環境変数 $TOKEN が設定されていません。")
     exit(1)
 
-  gui_start(token)
+  ProconApp(token).run()
 
 if __name__ == "__main__":
   main()

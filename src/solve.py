@@ -1,2 +1,3 @@
-def solve(file_path):
-  return []
+def solve(path):
+  with open(path) as file:
+    return []
