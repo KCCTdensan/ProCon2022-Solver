@@ -8,6 +8,21 @@
 % pip install -r requirements.txt
 ```
 
+## セットアップ : tensorflow
+
+Nvidia Container Toolkitを使う。
+
+Gentooでは
+
+```
+# emerge nvidia-container-toolkit
+# rc-service docker restart
+```
+
+でおけ
+
+docker runのときに`--gpus all`としてやる。
+
 ## 使い方
 
 `$TOKEN`にトークンを設定して
