@@ -1,14 +1,6 @@
 # 高専プロコン2022競技
 
-## セットアップ
-
-初回はだいぶ遅いかも。
-
-```
-% pip install -r requirements.txt
-```
-
-## セットアップ : tensorflow
+## 学習環境 - セットアップ
 
 Nvidia Container Toolkitを使う。
 
@@ -19,16 +11,31 @@ Gentooでは
 # rc-service docker restart
 ```
 
-でおけ
+とする。
+
+## 学習環境 - 使い方
 
 docker runのときに`--gpus all`としてやる。
 
-## 使い方
+```
+% docker build -t procon22 .
+% docker run -it --gpus all -v $(pwd)/train:/work/train procon22
+```
 
-`$TOKEN`にトークンを設定して
+## 回答環境 - セットアップ
+
+初回はだいぶ遅いかも。
+
+```
+% pip install -r requirements.txt
+```
+
+## 回答環境 - 使い方
+
+`TOKEN`にトークンを設定して，`HOST`に競技用サーバーのホスト名を設定したら
 
 ```
 % python3 main.py
 ```
 
-とすれば動きます。
+で動く。
