@@ -15,7 +15,7 @@ def Create_problem(nb_training,voice_num):
     data_y = np.empty(0)
 
     for i in range(nb_training):
-
+        print(i)
         mix = random.randint(3,10)
         x = np.zeros(max_len)
         y = np.zeros(nb_voice)

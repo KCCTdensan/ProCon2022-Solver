@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
+# os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
 
 import tensorflow as tf
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -14,7 +14,6 @@ from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
-import create_problem
 import invoice
 
 
@@ -23,7 +22,7 @@ os.environ['TF_ENABLE_GPU_GARBAGE_COLLECTION']='false'
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 10000
+nb_training = 10000 # 10000
 nb_voice = 88
 voice_num = 0
 
@@ -53,4 +52,4 @@ plt.xlabel("epoch")
 plt.legend()
 plt.show()
 
-model.save(f'voice_correct_in{voice_num}.h5')
+model.save(f'train/voice_correct_in{voice_num}.h5')

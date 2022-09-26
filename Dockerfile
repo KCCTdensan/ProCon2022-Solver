@@ -9,6 +9,7 @@ COPY req.train.txt .
 RUN pip install -r req.train.txt
 
 # /work/train が外界との窓口になる
+COPY src-training .
 
 ENTRYPOINT ["python3"]
-CMD [""]
+CMD ["train.py"]
