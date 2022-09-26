@@ -39,3 +39,9 @@ docker runのときに`--gpus all`としてやる。
 ```
 
 で動く。
+
+## 学習環境 - 掃除
+```
+% docker system prune
+```
+で掃除する
