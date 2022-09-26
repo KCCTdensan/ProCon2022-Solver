@@ -1,9 +1,11 @@
-FROM tensorflow/tensorflow:2.10.0-gpu
+# https://www.tensorflow.org/install/source?hl=ja#tested_build_configurations
+# 英語版のページに最新の対応表がある
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
 
 WORKDIR /work
 
 RUN apt-get update && \
-    apt-get install -y libsndfile1 && \
+    apt-get install -y python3 python3-pip libsndfile1 vim && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m pip install --upgrade pip
 
