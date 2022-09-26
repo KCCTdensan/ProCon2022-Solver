@@ -2,6 +2,8 @@
 
 ## 学習環境 - セットアップ
 
+Docker Desktop使ってる人は何もしなくて良い。
+
 Nvidia Container Toolkitを使う。
 
 Gentooでは
@@ -19,7 +21,13 @@ docker runのときに`--gpus all`としてやる。
 
 ```
 % docker build -t procon22 .
-% docker run -it --gpus all -v $(pwd)/train:/work/train procon22
+% docker run --rm -it --gpus all -v $(pwd)/train:/work/train procon22
+```
+
+## 学習環境 - デバッグ
+
+```
+% docker run -it --gpus all -v $(pwd)/src-training:/work -v $(pwd)/train:/work/train --entrypoint bash procon22
 ```
 
 ## 回答環境 - セットアップ
@@ -41,7 +49,9 @@ docker runのときに`--gpus all`としてやる。
 で動く。
 
 ## 学習環境 - 掃除
+
 ```
 % docker system prune
 ```
+
 で掃除する
