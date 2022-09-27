@@ -65,7 +65,7 @@ def Create_problem(nb_training,voice_num):
         if y[voice_num] == 1:
             ans = [1,0]
 
-        if ans[0] = 1:
+        if ans[0] == 1:
             voice_max = len_arr[voice_num]
     
         for p in range(nb_voice):
