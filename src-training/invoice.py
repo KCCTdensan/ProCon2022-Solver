@@ -69,7 +69,7 @@ def Create_problem(nb_training,voice_num):
         if ans[0] == 1:
             voice_max = len_arr[voice_num]
     
-        loc = random.randint(0,int(voice_max - 10000))
+        loc = random.randint(0,int(voice_max - 20000))
         for p in range(nb_voice):
             if y[p] == 1:
                 dif = random.choice(dif_nom)
