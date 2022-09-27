@@ -19,7 +19,7 @@ def Create_problem(nb_training,voice_num):
 
     for i in range(nb_voice):
         if i < 44:
-            num = p + 1
+            num = i + 1
             path = './JKSpeech/J{:0=2}.wav'.format(num)
             voice,sr =  librosa.load(path)
             zeros = np.zeros(max_len - len(voice))
@@ -27,7 +27,7 @@ def Create_problem(nb_training,voice_num):
             len_arr = np.append(len_arr,len(voice))
 
         else:
-            num = p - 43
+            num = i - 43
             path = './JKSpeech/E{:0=2}.wav'.format(num)
             voice,sr = librosa.load(path)
             eros = np.zeros(max_len - len(voice))
