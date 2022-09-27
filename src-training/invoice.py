@@ -75,6 +75,8 @@ def Create_problem(nb_training,voice_num):
                 dif = random.choice(dif_nom)
                 x += data_arr[p][dif + loc:dif + loc + 10000]
 
+        x = np.abs(np.fft.fft(x))
+        x = preprocessing.scale(x)
         data_x = np.append(data_x,x)
         data_y = np.append(data_y,ans)
 

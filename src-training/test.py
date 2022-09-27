@@ -48,8 +48,9 @@ def get_model():
         model = Sequential()
         model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
         model.add(MaxPool1D(pool_size=2, padding='same'))
-        model.add(Dense(64,activation='relu'))
-        model.add(Dense(16,activation='relu'))
+        # model.add(Dense(64,activation='relu'))
+        # model.add(Dense(16,activation='relu'))
+        model.add(LSTM(64, return_sequences=True))
         model.add(Flatten())
         model.add(Dense(2,activation='softmax'))
         model.compile(loss="categorical_crossentropy", optimizer=Adam(lr=1e-5),metrics=['accuracy'])
@@ -59,12 +60,12 @@ model = get_model()
 
 model.summary()
 
-history = model.fit(x_train, y_train, batch_size=64, epochs=100,verbose=1,validation_data=(x_valid, y_valid))
+history = model.fit(x_train, y_train, batch_size=128, epochs=100,verbose=1,validation_data=(x_valid, y_valid))
 
 plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
 plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
 plt.xlabel("epoch")
 plt.legend()
-plt.show()
 
-model.save(f'voice_correct_in{voice_num}.h5')
+plt.savefig(f"train/voice_correct_in{voice_num}.png")
+model.save(f"train/voice_correct_in{voice_num}.h5")
