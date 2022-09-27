@@ -15,7 +15,7 @@ def Create_problem(nb_training,voice_num):
     data_y = np.empty(0)
 
     for i in range(nb_training):
-        print(i)
+
         mix = random.randint(3,10)
         x = np.zeros(max_len)
         y = np.zeros(nb_voice)
@@ -28,7 +28,7 @@ def Create_problem(nb_training,voice_num):
             if y[ran_num] == 0:
                 y[ran_num] = 1
                 num += 1
-
+        
         #print(y)
         len_max = 0
         min_len = 0
@@ -51,7 +51,7 @@ def Create_problem(nb_training,voice_num):
                         min_len = len(voice)
                     if(len(voice) > len_max):
                         len_max = len(voice)
-
+                
                 dif = random.choice(dif_nom)
                 zeros = np.zeros(max_len - len(voice) + dif)
                 voice = np.append(voice[dif:],zeros)
@@ -83,7 +83,7 @@ def Create_problem(nb_training,voice_num):
 
     data_x = np.reshape(data_x,[nb_training,10000,1])
     data_y = np.reshape(data_y,[nb_training,2])
-
+    
     print('u')
 
     print(data_x)
