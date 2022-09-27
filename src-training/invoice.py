@@ -72,7 +72,7 @@ def Create_problem(nb_training,voice_num):
             loc = random.randint(0,int(voice_max - 10000))
             if y[p] == 1:
                 dif = random.choice(dif_nom)
-                x += data_arr[dif + loc:dif + loc + 10000]
+                x += data_arr[p][dif + loc:dif + loc + 10000]
 
         data_x = np.append(data_x,x)
         data_y = np.append(data_y,ans)
