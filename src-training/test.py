@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 
 import os
-os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
-
+# os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
+from multiprocessing import cpu_count
 import tensorflow as tf
-gpus = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(gpus[0], True)
+# gpus = tf.config.experimental.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(gpus[0], True)
+
+gpus = tf.config.list_physical_devices("GPU")
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+logical_gpus = tf.config.list_logical_devices("GPU")
+print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+
+tf.debugging.set_log_device_placement(True)
+strategy = tf.distribute.MirroredStrategy(logical_gpus)
 
 from keras.models import Model,Sequential
 from keras.layers import *
@@ -33,15 +42,20 @@ x_train, x_valid, y_train, y_valid = train_test_split(data_x, data_y, test_size=
 
 Input_shape = x_train.shape[1:]
 
-model = Sequential()
-model = Sequential()
-model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
-model.add(MaxPool1D(pool_size=2, padding='same'))
-model.add(Dense(64,activation='relu'))
-model.add(Dense(16,activation='relu'))
-model.add(Flatten())
-model.add(Dense(2,activation='softmax'))
-model.compile(loss="categorical_crossentropy", optimizer=Adam(lr=1e-5),metrics=['accuracy'])
+
+def get_model():
+    with strategy.scope():
+        model = Sequential()
+        model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
+        model.add(MaxPool1D(pool_size=2, padding='same'))
+        model.add(Dense(64,activation='relu'))
+        model.add(Dense(16,activation='relu'))
+        model.add(Flatten())
+        model.add(Dense(2,activation='softmax'))
+        model.compile(loss="categorical_crossentropy", optimizer=Adam(lr=1e-5),metrics=['accuracy'])
+        return model
+
+model = get_model()
 
 model.summary()
 
