@@ -30,9 +30,11 @@ def Create_problem(nb_training,voice_num):
             num = i - 43
             path = './JKSpeech/E{:0=2}.wav'.format(num)
             voice,sr = librosa.load(path)
-            eros = np.zeros(max_len - len(voice))
+            zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
             len_arr = np.append(len_arr,voice)
+
+        print(f'{i} import end.')
 
     data_arr = np.reshape(len_arr,[max_len,nb_voice])
 
