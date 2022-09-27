@@ -39,6 +39,7 @@ def Create_problem(nb_training,voice_num):
         print(f'{i} import end.')
 
     data_arr = np.reshape(data_arr,[max_len,nb_voice])
+    print(data_arr)
 
     for i in range(nb_training):
 
@@ -72,7 +73,7 @@ def Create_problem(nb_training,voice_num):
         for p in range(nb_voice):
             if y[p] == 1:
                 dif = random.choice(dif_nom)
-                x += np.reshape(data_arr[p][dif + loc:dif + loc + 10000],[10000,])
+                x += data_arr[p][dif + loc:dif + loc + 10000]
 
         data_x = np.append(data_x,x)
         data_y = np.append(data_y,ans)
