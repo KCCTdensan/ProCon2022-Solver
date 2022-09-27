@@ -68,11 +68,11 @@ def Create_problem(nb_training,voice_num):
         if ans[0] == 1:
             voice_max = len_arr[voice_num]
     
+        loc = random.randint(0,int(voice_max - 10000))
         for p in range(nb_voice):
-            loc = random.randint(0,int(voice_max - 10000))
             if y[p] == 1:
                 dif = random.choice(dif_nom)
-                x += data_arr[p][dif + loc:dif + loc + 10000]
+                x += np.reshape(data_arr[p][dif + loc:dif + loc + 10000],[10000,])
 
         data_x = np.append(data_x,x)
         data_y = np.append(data_y,ans)
