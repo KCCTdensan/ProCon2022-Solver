@@ -24,7 +24,7 @@ def Create_problem(nb_training,voice_num):
             voice,sr =  librosa.load(path)
             zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
-            len_arr = np.append(len_arr,len(voice))
+            len_arr = np.append(len_arr,voice)
 
         else:
             num = i - 43
@@ -32,7 +32,7 @@ def Create_problem(nb_training,voice_num):
             voice,sr = librosa.load(path)
             eros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
-            len_arr = np.append(len_arr,len(voice))
+            len_arr = np.append(len_arr,voice)
 
     data_arr = np.reshape(len_arr,[max_len,nb_voice])
 
