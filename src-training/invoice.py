@@ -24,7 +24,8 @@ def Create_problem(nb_training,voice_num):
             voice,sr =  librosa.load(path)
             zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
-            len_arr = np.append(len_arr,voice)
+            len_arr = np.append(len_arr,len(voice))
+            data_arr = np.append(len_arr,voice)
 
         else:
             num = i - 43
@@ -32,11 +33,12 @@ def Create_problem(nb_training,voice_num):
             voice,sr = librosa.load(path)
             zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
-            len_arr = np.append(len_arr,voice)
+            len_arr = np.append(len_arr,len(voice))
+            data_arr = np.append(len_arr,voice)
 
         print(f'{i} import end.')
 
-    data_arr = np.reshape(len_arr,[max_len,nb_voice])
+    data_arr = np.reshape(data_arr,[max_len,nb_voice])
 
     for i in range(nb_training):
 
@@ -62,9 +64,12 @@ def Create_problem(nb_training,voice_num):
         ans = [0,1]
         if y[voice_num] == 1:
             ans = [1,0]
+
+        if ans[0] = 1:
+            voice_max = len_arr[voice_num]
     
         for p in range(nb_voice):
-            loc = random.randint(0,voice_max - 10000)
+            loc = random.randint(0,int(voice_max - 10000))
             if y[p] == 1:
                 dif = random.choice(dif_nom)
                 x += data_arr[dif + loc:dif + loc + 10000]
