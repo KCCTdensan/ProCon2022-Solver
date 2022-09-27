@@ -38,7 +38,7 @@ def Create_problem(nb_training,voice_num):
 
         print(f'{i} import end.')
 
-    data_arr = np.reshape(data_arr,[max_len,nb_voice])
+    data_arr = np.reshape(data_arr,[nb_voice, max_len])
     print(data_arr)
 
     for i in range(nb_training):
