@@ -25,7 +25,7 @@ def Create_problem(nb_training,voice_num):
             zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
             len_arr = np.append(len_arr,len(voice))
-            data_arr = np.append(len_arr,voice)
+            data_arr = np.append(data_arr,voice)
 
         else:
             num = i - 43
@@ -34,7 +34,7 @@ def Create_problem(nb_training,voice_num):
             zeros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
             len_arr = np.append(len_arr,len(voice))
-            data_arr = np.append(len_arr,voice)
+            data_arr = np.append(data_arr,voice)
 
         print(f'{i} import end.')
 
