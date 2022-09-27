@@ -33,8 +33,8 @@ def Create_problem(nb_training,voice_num):
             eros = np.zeros(max_len - len(voice))
             voice = np.append(voice,zeros)
             len_arr = np.append(len_arr,len(voice))
-    
-    data_arr = np.reshape(data_arr,[max_len,nb_voice])
+
+    data_arr = np.reshape(len_arr,[max_len,nb_voice])
 
     for i in range(nb_training):
 
