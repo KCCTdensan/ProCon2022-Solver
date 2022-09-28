@@ -55,3 +55,12 @@ docker runのときに`--gpus all`としてやる。
 ```
 
 で掃除する
+
+## ファイル転送の行い方(任意のローカルディレクトリで)
+
+```bash
+$ scp -r oooo@oo.oo.ooo.ooo:~/Desktop/Procon22-Solver/ ./fromA/
+```
+
+もしくは任意のディレクトリで相手のPCから移してきてもよいかもしれない
+
