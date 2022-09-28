@@ -21,7 +21,7 @@ len_arr = np.empty(0)
 for i in range(nb_voice):
     if i < 44:
         num = i + 1
-        path = './JKSpeech/J{:0=2}.wav'.format(num)
+        path = './JKsppech/J{:0=2}.wav'.format(num)
         voice,sr =  librosa.load(path)
         len_arr = np.append(len_arr,len(voice))
         zeros = np.zeros(max_len - len(voice))
@@ -30,7 +30,7 @@ for i in range(nb_voice):
 
     else:
         num = i - 43
-        path = './JKSpeech/E{:0=2}.wav'.format(num)
+        path = './JKspeech/E{:0=2}.wav'.format(num)
         voice,sr = librosa.load(path)
         len_arr = np.append(len_arr,len(voice))
         zeros = np.zeros(max_len - len(voice))
