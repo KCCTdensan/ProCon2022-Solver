@@ -64,3 +64,21 @@ $ scp -r oooo@oo.oo.ooo.ooo:~/Desktop/Procon22-Solver/ ./fromA/
 
 もしくは任意のディレクトリで相手のPCから移してきてもよいかもしれない
 
+## バックアップするために必要なコマンド集
+※procon-contがある前提
+```
+$ docker run --rm -v procon-cont:/work -v $(pwd)/backup:/backup alpine tar cvf /backup/backup.tar /work
+```
+
+### 展開する
+```bash
+$ tar -xvf ./backup/backup.tar
+```
+
+これでバックアップが完了する
+
+### メモ
+```bash
+$ docker volume create procon-cont
+```
+
