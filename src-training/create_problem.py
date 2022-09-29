@@ -12,9 +12,6 @@ problem_len = 10000
 nb_training = 1000
 voice_num = 0
 
-data_x = np.empty(0)
-data_y = np.empty(0)
-
 data_arr = np.empty(0)
 len_arr = np.empty(0)
 
@@ -44,6 +41,10 @@ print(len_arr)
 with open('./data/data_x.csv', 'a') as f_x:
     with open('./data/data_y.csv', 'a') as f_y:
         for j in range(50):
+
+            data_x = np.empty(0)
+            data_y = np.empty(0)
+
             for i in range(nb_training):
 
                 mix = random.randint(3,19)
@@ -95,5 +96,6 @@ with open('./data/data_x.csv', 'a') as f_x:
                 if i % 100 == 0:
                     print(f"training : {i}")
 
+            print("file writing")
             np.savetxt(f_x,data_x,delimiter=",")
             np.savetxt(f_y,data_y,delimiter=",")
