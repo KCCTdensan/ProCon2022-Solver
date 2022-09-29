@@ -54,7 +54,7 @@ Input_shape = x_train.shape[1:]
 def get_model():
     with strategy.scope():
         model = Sequential()
-        model.add(Conv1D(128, 64, activation='relu',input_shape=Input_shape))
+        model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
         model.add(MaxPool1D(pool_size=2, padding='same'))
         # model.add(Dense(64,activation='relu'))
         # model.add(Dense(16,activation='relu'))
@@ -68,13 +68,7 @@ model = get_model()
 
 model.summary()
 
-early_stopping = callbacks.EarlyStopping(
-                            monitor='val_loss',
-                            min_delta=0.01,
-                            patience=3,
-)
-
-history = model.fit(x_train, y_train, batch_size=1024, epochs=0,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping])
+history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid))
 
 plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
 plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
