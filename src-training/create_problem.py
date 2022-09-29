@@ -9,7 +9,7 @@ nb_voice = 88
 max_len = 185000
 dif_nom = np.arange(0,10000,100)
 problem_len = 10000
-nb_training = 10000
+nb_training = 50000
 voice_num = 0
 
 data_x = np.empty(0)
@@ -21,7 +21,7 @@ len_arr = np.empty(0)
 for i in range(nb_voice):
     if i < 44:
         num = i + 1
-        path = './JKsppech/J{:0=2}.wav'.format(num)
+        path = './JKspeech/J{:0=2}.wav'.format(num)
         voice,sr =  librosa.load(path)
         len_arr = np.append(len_arr,len(voice))
         zeros = np.zeros(max_len - len(voice))
