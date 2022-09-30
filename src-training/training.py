@@ -23,59 +23,64 @@ from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
-# import create_problem
-
+import create_problem
 
 os.environ['TF_ENABLE_GPU_GARBAGE_COLLECTION']='false'
 
-max_voice_len = 95000
-data_x = np.empty(0)
-data_y = np.empty(0)
-nb_training = 200000
-problem_len = 10000
-nb_voice = 88
-voice_num = 0
-file_pathx = "./data/data_x.csv"
-file_pathy = "./data/data_y.csv"
+for i in range(88):
+    create_problem.create(i, 5)
 
-data_x = np.loadtxt(file_pathx, delimiter=',') 
-data_y = np.loadtxt(file_pathy, delimiter=',') 
+    max_voice_len = 95000
+    data_x = np.empty(0)
+    data_y = np.empty(0)
+    nb_training = 200000
+    problem_len = 10000
+    nb_voice = 88
+    voice_num = i
+    file_pathx = "./data/data_x.csv"
+    file_pathy = "./data/data_y.csv"
 
-print(data_x,data_y)
+    data_x = np.loadtxt(file_pathx, delimiter=',') 
+    data_y = np.loadtxt(file_pathy, delimiter=',') 
 
-data_x = np.reshape(data_x,[nb_training,problem_len,1])
-data_y = np.reshape(data_y,[nb_training,2])
+    print(data_x,data_y)
 
-x_train, x_valid, y_train, y_valid = train_test_split(data_x, data_y, test_size=0.2, shuffle= True)
+    data_x = np.reshape(data_x,[nb_training,problem_len,1])
+    data_y = np.reshape(data_y,[nb_training,2])
 
-Input_shape = x_train.shape[1:]
+    x_train, x_valid, y_train, y_valid = train_test_split(data_x, data_y, test_size=0.2, shuffle= True)
+
+    Input_shape = x_train.shape[1:]
 
 
-def get_model():
-    with strategy.scope():
-        model = Sequential()
-        model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
-        model.add(MaxPool1D(pool_size=2, padding='same'))
-        # model.add(Dense(64,activation='relu'))
-        # model.add(Dense(16,activation='relu'))
-        model.add(LSTM(300, return_sequences=True))
-        model.add(Flatten())
-        model.add(Dense(2,activation='softmax'))
-        model.compile(loss="binary_crossentropy", optimizer=Adam(lr=1e-3),metrics=['accuracy'])
-        return model
+    def get_model():
+        with strategy.scope():
+            model = Sequential()
+            model.add(Conv1D(128, 32, activation='relu',input_shape=Input_shape))
+            model.add(MaxPool1D(pool_size=2, padding='same'))
+            # model.add(Dense(64,activation='relu'))
+            # model.add(Dense(16,activation='relu'))
+            model.add(LSTM(300, return_sequences=True))
+            model.add(Flatten())
+            model.add(Dense(2,activation='softmax'))
+            model.compile(loss="binary_crossentropy", optimizer=Adam(lr=1e-3),metrics=['accuracy'])
+            return model
 
-model = get_model()
+    model = get_model()
 
-model.summary()
+    model.summary()
 
-early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=2)
+    early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=2)
 
-history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping])
+    history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping])
 
-plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
-plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
-plt.xlabel("epoch")
-plt.legend()
+    plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
+    plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
+    plt.xlabel("epoch")
+    plt.legend()
 
-plt.savefig(f"train/voice_correct_in{voice_num}.png")
-model.save(f"train/voice_correct_in{voice_num}.h5")
+    os.remove('./data/data_x.csv')
+    os.remove('./data/data_y.csv')
+
+    plt.savefig(f"train/voice_correct_in{i}.png")
+    model.save(f"train/voice_correct_in{i}.h5")
