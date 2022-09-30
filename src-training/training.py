@@ -18,7 +18,7 @@ strategy = tf.distribute.MirroredStrategy(logical_gpus)
 
 from keras.models import Model,Sequential
 from keras.layers import *
-from keras import callbacks
+from keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
@@ -68,7 +68,8 @@ model = get_model()
 
 model.summary()
 
-history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid))
+early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.001,patience=2)
+history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping])
 
 plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
 plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
