@@ -28,7 +28,8 @@ import create_problem
 os.environ['TF_ENABLE_GPU_GARBAGE_COLLECTION']='false'
 
 for i in range(88):
-    create_problem.create(i, 5)
+    print(i) 
+    create_problem.create(i,400)
 
     max_voice_len = 95000
     data_x = np.empty(0)

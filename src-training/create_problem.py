@@ -7,7 +7,7 @@ import librosa
 import os
 
 # loops: 500*n
-def create(_voice_num: int, loops: int)
+def create(_voice_num:int, loops:int):
 
     nb_voice = 88
     max_len = 185000
@@ -103,6 +103,6 @@ def create(_voice_num: int, loops: int)
                     if (i+1) % 100 == 0:
                         print(f"training : {i+1}")
 
-                print("file writing")
+                print(f"file writing{j}")
                 np.savetxt(f_x,data_x,delimiter=",")
                 np.savetxt(f_y,data_y,delimiter=",")
