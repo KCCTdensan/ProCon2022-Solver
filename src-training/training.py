@@ -58,7 +58,7 @@ def get_model():
         model.add(MaxPool1D(pool_size=2, padding='same'))
         # model.add(Dense(64,activation='relu'))
         # model.add(Dense(16,activation='relu'))
-        model.add(LSTM(128, return_sequences=True))
+        model.add(LSTM(300, return_sequences=True))
         model.add(Flatten())
         model.add(Dense(2,activation='softmax'))
         model.compile(loss="binary_crossentropy", optimizer=Adam(lr=1e-3),metrics=['accuracy'])
@@ -68,7 +68,8 @@ model = get_model()
 
 model.summary()
 
-early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.001,patience=2)
+early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=2)
+
 history = model.fit(x_train, y_train, batch_size=512, epochs=100,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping])
 
 plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
