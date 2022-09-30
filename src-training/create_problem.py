@@ -4,16 +4,20 @@ from sklearn import preprocessing
 import numpy as np
 import random
 import librosa
+import os
 
 nb_voice = 88
 max_len = 185000
 dif_nom = np.arange(0,10000,100)
 problem_len = 10000
-nb_training = 1000
+nb_training = 500
 voice_num = 0
 
 data_arr = np.empty(0)
 len_arr = np.empty(0)
+
+os.remove('./data/data_x.csv')
+os.remove('./data/data_y.csv')
 
 for i in range(nb_voice):
     if i < 44:
@@ -40,7 +44,7 @@ print(len_arr)
 
 with open('./data/data_x.csv', 'a') as f_x:
     with open('./data/data_y.csv', 'a') as f_y:
-        for j in range(50):
+        for j in range(400):
 
             data_x = np.empty(0)
             data_y = np.empty(0)
