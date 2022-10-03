@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from multiprocessing import Pool, cpu_count
 from sklearn import preprocessing
 import numpy as np
 import random
@@ -14,7 +13,6 @@ def create(loops:int):
     dif_nom = np.arange(0,10000,100)
     problem_len = 10000
     nb_training = 500
-    voice_num = _voice_num
 
     data_arr = np.empty(0)
     len_arr = np.empty(0)
@@ -69,9 +67,6 @@ def create(loops:int):
                     for p in range(nb_voice):
                         if len_arr[p] > voice_max and y[ran_num] == 1:
                             voice_max = len_arr[p]
-
-                    if ans[0] == 1:
-                        voice_max = len_arr[voice_num]
 
                     dif_arr = np.empty(0)
                     dif_max = 0

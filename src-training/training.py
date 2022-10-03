@@ -30,11 +30,11 @@ os.environ['TF_ENABLE_GPU_GARBAGE_COLLECTION']='false'
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 1000000
+nb_training = 1000
 problem_len = 10000
 nb_voice = 88
 
-create_problem.create(2000)
+create_problem.create(nb_training / 500)
 
 file_pathx = "./data/data_x.csv"
 file_pathy = "./data/data_y.csv"
