@@ -7,7 +7,7 @@ import librosa
 import os
 
 # loops: 500*n
-def create(_voice_num:int, loops:int):
+def create(loops:int):
 
     nb_voice = 88
     max_len = 185000
@@ -54,13 +54,11 @@ def create(_voice_num:int, loops:int):
 
                 for i in range(nb_training):
 
-                    mix = random.randint(3,19)
+                    mix = random.randint(3,20)
                     x = np.zeros(problem_len)
                     y = np.zeros(nb_voice)
 
                     num = 0
-                    y[voice_num] = random.randint(0,1)
-
                     while num < mix:
                         ran_num = random.randint(0,nb_voice - 1)
                         if y[ran_num] == 0:
@@ -71,10 +69,6 @@ def create(_voice_num:int, loops:int):
                     for p in range(nb_voice):
                         if len_arr[p] > voice_max and y[ran_num] == 1:
                             voice_max = len_arr[p]
-                    
-                    ans = [0,1]
-                    if y[voice_num] == 1:
-                        ans = [1,0]
 
                     if ans[0] == 1:
                         voice_max = len_arr[voice_num]
@@ -98,7 +92,7 @@ def create(_voice_num:int, loops:int):
                     x = np.abs(np.fft.fft(x))
                     x = preprocessing.scale(x)
                     data_x = np.append(data_x,x)
-                    data_y = np.append(data_y,ans)
+                    data_y = np.append(data_y,y)
 
                     if (i+1) % 100 == 0:
                         print(f"training : {i+1}")
