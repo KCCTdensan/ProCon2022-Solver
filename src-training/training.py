@@ -34,7 +34,7 @@ nb_training = 1000
 problem_len = 10000
 nb_voice = 88
 
-create_problem.create(nb_training / 500)
+create_problem.create(int(nb_training / 500))
 
 file_pathx = "./data/data_x.csv"
 file_pathy = "./data/data_y.csv"
@@ -57,9 +57,9 @@ for i in range(88):
         else:
             ans = np.append(ans,[0,1])
     
-    data_y = np.reshape(ans,[nb_training,2])
+    ans = np.reshape(ans,[nb_training,2])
 
-    x_train, x_valid, y_train, y_valid = train_test_split(data_x, data_y, test_size=0.2, shuffle= True)
+    x_train, x_valid, y_train, y_valid = train_test_split(data_x, ans, test_size=0.1, shuffle= True)
 
     Input_shape = x_train.shape[1:]
 
