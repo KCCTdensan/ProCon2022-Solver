@@ -19,8 +19,11 @@ def solve(path):
 
     ans = np.empty(0)
     for i in range(88):
+
       pre_data = np.round(model.predict(voice))
-      if pre_data[0] == 1:
-        ans = np.append(ans,i)
+      
+      str = '{:0=2}'.format((i + 1) % 44)
+      if pre_data[0] == 1 and  (str in ans) == False:
+        ans = np.append(ans,str)
 
     return []
