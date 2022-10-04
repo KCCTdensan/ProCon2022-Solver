@@ -137,7 +137,7 @@ class ProconUI(BoxLayout):
     self.nursery = nursery
     Clock.schedule_interval(lambda _: self.update_clock(), 0.001)
     Clock.schedule_interval(lambda _: self.update_timelimit(), 0.001)
-    Clock.schedule_interval(lambda _: self.trigger_update_info(), 2)
+    Clock.schedule_interval(lambda _: self.trigger_update_info(), 1)
 
   def trigger_update_info(self):
     self.update_problem_event.set()

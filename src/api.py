@@ -47,8 +47,13 @@ async def get_problem():
   else:
     raise
 
-def get_wav():
-  pass
+async def get_wav():
+  res = await get("/problem/chunks/:filename")
+  if res.status_code == httpx.codes.OK:
+    json = res.json()
+    print(f"\n")
+  else:
+    raise
 
 async def submit_problem(ans):
   res = await post_json("/problem", ans)
