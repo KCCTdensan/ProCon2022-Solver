@@ -9,7 +9,7 @@ def solve(path):
 
   model = np.empty(0)
   for i in range(88):
-    model = np.append(model,load_model(f'voice_correct_in{voice_num}_div{div}.h5')) #ここに学習後のファイルをぶち込む
+    model = np.append(model,load_model(f'voice_correct_in{voice_num}_div{div}.h5')) #main.pyが始まった瞬間にこれを読み込みたい
 
   with open(path) as file:
 
