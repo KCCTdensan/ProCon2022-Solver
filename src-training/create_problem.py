@@ -86,7 +86,7 @@ def create(loops:int):
 
                     x = np.abs(np.fft.fft(x))
                     x = preprocessing.scale(x)
-                    data_x = np.append(data_x,x)
+                    data_x = np.append(data_x,x[:3000])
                     data_y = np.append(data_y,y)
 
                     if (i+1) % 100 == 0:
