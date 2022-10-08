@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sklearn import preprocessing
+from tensorflow.python.keras.models import load_model
 import numpy as np
 import random
 import librosa
