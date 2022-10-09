@@ -31,17 +31,11 @@ os.environ['TF_ENABLE_GPU_GARBAGE_COLLECTION']='false'
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 160000
-problem_len = 3000
+nb_training = 10000
+problem_len = 16384
 nb_voice = 88
 
-#create_problem.create(int(nb_training / 500))
-
-file_pathx = "./data/data_x.csv"
-file_pathy = "./data/data_y.csv"
-
-data_x = np.loadtxt(file_pathx, delimiter=',') 
-data_y = np.loadtxt(file_pathy, delimiter=',') 
+data_x,data_y = create_problem.create(nb_training)
 
 data_x = np.reshape(data_x,[nb_training,problem_len,1])
 data_y = np.reshape(data_y,[nb_training,nb_voice])
