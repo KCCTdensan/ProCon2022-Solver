@@ -32,7 +32,7 @@ max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
 nb_training = 10000
-problem_len = 16384
+problem_len = 8192
 nb_voice = 88
 
 data_x,data_y = create_problem.create(nb_training)

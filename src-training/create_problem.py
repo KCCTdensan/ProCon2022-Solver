@@ -76,8 +76,8 @@ def create(loops:int):
                 num += 1
 
         x_complex = np.fft.fft(x)
-        x = np.real(x_complex)
-        x = np.append(x,np.imag(x_complex))
+        x = np.real(x_complex)[:4096]
+        x = np.append(x,np.imag(x_complex)[:4096])
         x = preprocessing.scale(x)
         data_x.append(x)
         data_y.append(y)
