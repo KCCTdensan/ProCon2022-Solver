@@ -39,13 +39,13 @@ nb_voice = 88
 
 def step_decay(epoch):
     lr = 0.001
-    if(epoch >= 10):
+    if(epoch >= 5):
         lr/=5
+    if(epoch>=10):
+        lr/=2
     if(epoch>=15):
         lr/=2
     if(epoch>=20):
-        lr/=2
-    if(epoch>=25):
         lr/=2
     return lr
 
