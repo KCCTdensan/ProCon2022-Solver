@@ -9,7 +9,7 @@ def create(loops:int,voice_num):
     nb_voice = 88
     max_len = 185000
     dif_nom = np.arange(0,10000,100)
-    problem_len = 8192
+    problem_len = 10000
 
     data_arr = np.empty(0)
     len_arr = np.empty(0)
@@ -75,9 +75,9 @@ def create(loops:int,voice_num):
                 x += data_arr[p][int(dif_arr[num] + loc):int(dif_arr[num] + loc + problem_len)]
                 num += 1
 
-        x= np.abs(np.fft.fft(x))
+        x = np.abs(np.fft.fft(x))
         x = preprocessing.scale(x)
-        data_x.append(x[: int(problem_len / 2)])
+        data_x.append(x[:5000])
         data_y.append(y)
 
         if (i+1) % 10000 == 0:
