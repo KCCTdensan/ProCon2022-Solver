@@ -33,19 +33,15 @@ np.set_printoptions(edgeitems=10)
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 50000
+nb_training = 100000
 problem_len = 10000
 nb_voice = 88
 
 def step_decay(epoch):
     lr = 0.001
-    if(epoch >= 5):
+    if(epoch >= 10):
         lr/=5
-    if(epoch>=10):
-        lr/=2
     if(epoch>=15):
-        lr/=2
-    if(epoch>=20):
         lr/=2
     return lr
 
@@ -65,7 +61,7 @@ for i in range(88):
             ans = np.append(ans,[0,1])
     
     ans = np.reshape(ans,[nb_training,2])
-    print(f'\nans = {ans}')
+    #print(f'\nans = {ans}')
     print(type(data_x))
     print(type(data_y))
 
