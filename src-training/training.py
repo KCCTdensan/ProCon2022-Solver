@@ -38,10 +38,10 @@ problem_len = 10000
 nb_voice = 88
 
 def step_decay(epoch):
-    lr = 0.001
-    if(epoch >= 10):
+    lr = 0.003
+    if(epoch >= 3):
         lr/=5
-    if(epoch>=15):
+    if(epoch>=10):
         lr/=2
     return lr
 
@@ -82,7 +82,7 @@ for i in range(88):
             model.add(LSTM(16, return_sequences=True))
             model.add(Flatten())
             model.add(Dense(2,activation='softmax'))
-            model.compile(loss="binary_crossentropy", optimizer=Adam(lr=1e-3),metrics=['accuracy'])
+            model.compile(loss="binary_crossentropy", optimizer=Adam(lr=3e-3),metrics=['accuracy'])
 
             return model
 
@@ -90,10 +90,10 @@ for i in range(88):
 
     model.summary()
 
-    early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=4)
+    early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=3)
 
     lr_decay = LearningRateScheduler(step_decay)
-    history = model.fit(x_train, y_train, batch_size=128, epochs=100,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
+    history = model.fit(x_train, y_train, batch_size=128, epochs=20,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
 
     plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
     plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
