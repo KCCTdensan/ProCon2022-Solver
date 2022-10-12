@@ -247,9 +247,9 @@ class ProconUI(BoxLayout):
       try:
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
-        print(f"{datetime.now()} [OK ] 問題を提出しました")
 
         res = await submit_problem(ans)
+        print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
 
       except AnswerException:
