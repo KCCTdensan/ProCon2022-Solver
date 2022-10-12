@@ -18,4 +18,4 @@ RUN pip install -r req.train.txt
 COPY src-training .
 
 ENTRYPOINT ["python3"]
-CMD ["test.py"]
+CMD ["training.py"]

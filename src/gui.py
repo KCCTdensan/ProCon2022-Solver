@@ -128,9 +128,11 @@ class ProconUI(BoxLayout):
   nursery = None
   update_problem_event = trio.Event()
   update_match_event = trio.Event()
-  preview_answer_event = trio.Event()
+  solve_problem_event = trio.Event()
   submit_answer_event = trio.Event()
   timelimit = 0
+  chunks_n = 0 # update_problem_handler, solve_problem_event
+  previewed = False
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -179,14 +181,13 @@ class ProconUI(BoxLayout):
         self.update_problem_event = trio.Event()
 
         res = await get_problem()
-        print(f"DEBUG: {datetime.now()} [OK ] 問題情報を取得しました")
+        print(f"{datetime.now()}       問題情報を取得しました")
         problem_id  = res["id"]
-        chunks      = res["chunks"]
         starts_at   = res["starts_at"]
         time_limit  = res["time_limit"]
         data        = res["data"]
-
-        self.timelimit = starts_at + time_limit
+        self.chunks_n   = res["chunks"]
+        self.timelimit  = starts_at + time_limit
 
         sat = datetime.fromtimestamp(starts_at)
         sat_fmt = \
@@ -197,8 +198,14 @@ class ProconUI(BoxLayout):
           ("0" + str(sat.second))[-2:]
         display(problem_id, sat_fmt, time_limit, data)
 
+        if not previewed:
+          print(f"{datetime.now()} [OK ] 問題情報が更新されたので解いてみました")
+          self.solve_problem_event.set()
+          previewed = True
+
       except Exception:
-        print(f"DEBUG: {datetime.now()} [ERR] 問題情報の取得に失敗しました")
+        print(f"{datetime.now()}       問題情報の取得に失敗しました")
+        previewed = False
         display("-", "-", "-", "-")
 
   async def update_match_handler(self):
@@ -213,40 +220,40 @@ class ProconUI(BoxLayout):
         self.update_match_event = trio.Event()
 
         res = await get_match()
-        print(f"DEBUG: {datetime.now()} [OK ] 試合情報を取得しました")
+        print(f"{datetime.now()}       試合情報を取得しました")
         problems  = res["problems"]
         bonus     = res["bonus_factor"]
         penalty   = res["penalty"]
         display(problems, bonus, penalty)
 
       except Exception:
-        print(f"DEBUG: {datetime.now()} [ERR] 試合情報の取得に失敗しました")
+        print(f"{datetime.now()}       試合情報の取得に失敗しました")
         display("-", "-", "-")
 
-  async def preview_answer_handler(self):
+  async def solve_problem_handler(self):
     while True:
       try:
-        await self.preview_answer_event.wait()
-        self.preview_answer_event = trio.Event()
+        await self.solve_problem_event.wait()
+        self.solve_problem_event = trio.Event()
 
-        # TODO
-        print(f"DEBUG: {datetime.now()} [OK ] プレビューを更新しました")
+        ans = solve(await get_wav(self.chunks_n))
+        print(f"{datetime.now()} [OK ] 問題を解きました")
 
       except Exception:
-        print(f"DEBUG: {datetime.now()} [ERR] プレビューに失敗しました")
+        print(f"{datetime.now()} [ERR] 問題が解けませんでした")
 
   async def submit_answer_handler(self):
     while True:
       try:
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
-        print(f"DEBUG: {datetime.now()} [OK ] 問題を提出しました")
+        print(f"{datetime.now()} [OK ] 問題を提出しました")
 
         res = await submit_problem(ans)
         # display result
 
       except AnswerException:
-        print(f"DEBUG: {datetime.now()} [ERR] 回答の形式が不正です")
+        print(f"{datetime.now()} [ERR] 回答の形式が不正です")
 
       except Exception:
-        print(f"DEBUG: {datetime.now()} [ERR] 問題の提出に失敗しました")
+        print(f"{datetime.now()} [ERR] 問題の提出に失敗しました")

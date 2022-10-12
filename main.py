@@ -8,6 +8,17 @@ from src.gui import *
 from src.api import *
 
 async def main():
+
+  ##
+  ##  MODEL
+  ##
+
+  initModel()
+
+  ##
+  ##  API
+  ##
+
   token = os.getenv("TOKEN")
   if not token:
     print("環境変数 $TOKEN が設定されていません。")
@@ -22,6 +33,10 @@ async def main():
 
   initApi(host, token)
 
+  ##
+  ##  MAIN
+  ##
+
   async with trio.open_nursery() as nursery:
     root = ProconUI(nursery)
 
@@ -32,7 +47,7 @@ async def main():
     nursery.start_soon(ui_root)
     nursery.start_soon(root.update_problem_handler)
     nursery.start_soon(root.update_match_handler)
-    nursery.start_soon(root.preview_answer_handler)
+    nursery.start_soon(root.solve_problem_handler)
     nursery.start_soon(root.submit_answer_handler)
 
 if __name__ == "__main__":
