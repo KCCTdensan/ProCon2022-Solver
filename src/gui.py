@@ -239,7 +239,8 @@ class ProconUI(BoxLayout):
         ans = solve(await get_wav(self.chunks_n))
         print(f"{datetime.now()} [OK ] 問題を解きました")
 
-      except Exception:
+      except Exception as e:
+        print(e)
         print(f"{datetime.now()} [ERR] 問題が解けませんでした")
 
   async def submit_answer_handler(self):

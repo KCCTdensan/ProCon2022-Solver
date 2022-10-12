@@ -55,9 +55,10 @@ async def get_chunk(name):
   for _ in range(3): # try for 3 times
     res = await get(f"/problem/chunks/{name}")
     if digest == hashlib.sha256(res.content).hexdigest():
-      with tempfile.NamedTemporaryFile() as f:
-        f.write(res.content)
-        return f
+      f = tempfile.NamedTemporaryFile()
+      f.write(res.content)
+      f.seek(0)
+      return f
   print(f"{datetime.now()}       failed to get /problem/chunks/{name}")
   raise
 
@@ -76,14 +77,25 @@ async def get_wav(chunk_n):
       nursery.start_soon(store_chunk, name)
   print(f"{datetime.now()} [OK ] all chunks got successfully")
 
-  with tempfile.NamedTemporaryFile() as f:
-    with wave.open(f, "w") as w:
-      for name in chunk_names:
-        f_chunk = chunks[name]
-        with wave.open(f_chunk, "r") as w_chunk:
-          w.writeframes(f_chunk.readframes()) # error
-    print(f"{datetime.now()} [OK ] wave generated : {f.name}")
-    return f
+  f = tempfile.NamedTemporaryFile()
+  with wave.open(f, "wb") as w:
+    chunk_first = chunks[chunk_names[0]]
+    with wave.open(chunk_first, "rb") as w_first:
+      w.setparams(w_first.getparams())
+      print(f"{datetime.now()} [OK ] setting wave params : {w_first.getparams()}")
+    chunk_first.seek(0)
+
+    for name in chunk_names:
+      f_chunk = chunks[name]
+      with wave.open(f_chunk, "rb") as w_chunk:
+        w.writeframes(w_chunk.readframes(w_chunk.getnframes()))
+
+  for name in chunk_names:
+    chunks[name].close()
+
+  print(f"{datetime.now()} [OK ] wave generated : {f.name}")
+  f.seek(0)
+  return f
 
 async def submit_problem(ans):
   res = await post_json("/problem", ans)
