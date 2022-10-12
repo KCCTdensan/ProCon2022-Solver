@@ -2,7 +2,7 @@
 
 import os
 
-os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
+#os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
 
 import tensorflow as tf
 
@@ -45,7 +45,7 @@ def step_decay(epoch):
         lr/=2
     return lr
 
-for i in range(88):
+for i in range(44,88):
     print(f'\nvoice_num = {i}')
 
     data_x,data_y = create_problem.create(nb_training,i)
