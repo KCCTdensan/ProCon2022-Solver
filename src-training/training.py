@@ -100,8 +100,8 @@ for i in range(44,88):
     plt.xlabel("epoch")
     plt.legend()
     
-    plt.savefig(f"train_renew/voice_correct_in{i}.png")
-    model.save(f"train_renew/voice_correct_in{i}.h5")
+    plt.savefig(f"train/voice_correct_in{i}.png")
+    model.save(f"train/voice_correct_in{i}.h5")
 
     K.clear_session()
     gc.collect()
