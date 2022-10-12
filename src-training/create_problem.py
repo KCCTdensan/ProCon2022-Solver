@@ -58,6 +58,8 @@ def create(loops:int,voice_num):
         for p in range(nb_voice):
             if len_arr[p] > voice_max and y[ran_num] == 1:
                 voice_max = len_arr[p]
+        if(y[voice_num] == 1):
+            voice_max = len_arr[voice_num]
 
         dif_arr = np.empty(0)
         dif_max = 0
