@@ -68,7 +68,7 @@ def create(loops:int):
                 if(dif_max < dif):
                     dif_max = dif
 
-        loc = random.randint(0,int(voice_max - (problem_len + dif_max)))
+        loc = random.randrange(0,int(voice_max - (problem_len + dif_max)), 100)
         num = 0
         for p in range(nb_voice):
             if y[p] == 1:
