@@ -22,8 +22,13 @@ def solve(f):
   voice, sr = librosa.load(f,sr=48000)
   voice_len = len(voice)
 
+  num = 100
   loop = int(((voice_len - 20000)) / 100)
-  if loop > 50:
+  if loop > 100:
+    loop_list = range(int(loop/2 - 50),int(loop/2 + 50),2)
+    loop = 50
+    num = 200
+  elif loop > 50:
     loop_list = range(int(loop/2 - 25),int(loop/2 + 25))
     loop = 50
   else:
@@ -34,7 +39,7 @@ def solve(f):
   for i in loop_list:
     i = tf.convert_to_tensor(i, dtype=tf.int64)
 
-    x = voice[i * 100 : i * 100 + 20000]
+    x = voice[i * num : i * num + 20000]
     x = tf.abs(np.fft.fft(x))
     x = preprocessing.scale(x)
     x = x[:10000]
