@@ -19,28 +19,36 @@ def solve(f):
   voice_len = len(voice)
   ans = np.zeros(model_n)
 
+  timestart = time.time()
+
   start = 0
   loop = int((voice_len - 20000) / 100)
   print(loop)
+  x_list = []
   for i in range(loop):
       i = tf.convert_to_tensor(i, dtype=tf.int64)
 
       x = voice[start : start + 20000]
-      x = np.abs(np.fft.fft(x))
+      x = tf.abs(np.fft.fft(x))
       x = preprocessing.scale(x)
       x = x[:10000]
-      x = np.reshape(x,[1,10000,1])
+      x = tf.reshape(x,[1,10000,1])
+      x_list.append(x)
       start += 100
 
-      for p in range(model_n):
-          p = tf.convert_to_tensor(p, dtype=tf.int64)
+  print('problem_load_finish')
 
-          pre_data = np.round(model[p].predict(x))
-          #print(pre_data)
-          if pre_data[0][0] == 1:
+  x_list = tf.reshape(x_list,[loop,10000,1])
+  for p in range(model_n):
+      p = tf.convert_to_tensor(p, dtype=tf.int64)
+
+      pre_data = tf.round(model[p].predict(x_list))
+      #print(pre_data)
+      for i in range(len(pre_data)):
+          if pre_data[i][0] == 1:
               ans[p] += 1
 
-  print("pre2_finish")
+  print('predict_finish')
 
   print(ans)
   pre_ans = ans
@@ -58,5 +66,11 @@ def solve(f):
           str = '{:0=2}'.format((i + 1) % 44)
           if str not in ans:
               ans.append(str)
-              
+
+  print(ans)
+
+  end = time.time()
+
+  print(f'time ={end - timestart}')
+
   return ans
