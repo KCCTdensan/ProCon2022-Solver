@@ -38,6 +38,7 @@ def solve(f):
     x = voice[end - 20000 : end]
     x = np.abs(np.fft.fft(x))
     x = preprocessing.scale(x)
+    x = np.reshape(x,[1,20000,1])
     end -= 100
 
     for p in range(model_n):
