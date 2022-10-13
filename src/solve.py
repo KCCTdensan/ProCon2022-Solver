@@ -20,42 +20,43 @@ def solve(f):
   ans = np.zeros(model_n)
 
   start = 0
-  for i in range(10):
+  loop = int((voice_len - 20000) / 100)
+  print(loop)
+  for i in range(loop):
+      i = tf.convert_to_tensor(i, dtype=tf.int64)
 
-    x = voice[start : start + 20000]
-    x = np.abs(np.fft.fft(x))
-    x = preprocessing.scale(x)
-    start += 100
+      x = voice[start : start + 20000]
+      x = np.abs(np.fft.fft(x))
+      x = preprocessing.scale(x)
+      x = x[:10000]
+      x = np.reshape(x,[1,10000,1])
+      start += 100
 
-    for p in range(model_n):
-      pre_data = np.round(model[i].predict(voice))
-      if pre_data[0] == 1:
-        ans[p] += 1
+      for p in range(model_n):
+          p = tf.convert_to_tensor(p, dtype=tf.int64)
 
-  end = voice_len - (voice_len % 100)
-  for i in range(10):
+          pre_data = np.round(model[p].predict(x))
+          #print(pre_data)
+          if pre_data[0][0] == 1:
+              ans[p] += 1
 
-    x = voice[end - 20000 : end]
-    x = np.abs(np.fft.fft(x))
-    x = preprocessing.scale(x)
-    x = np.reshape(x,[1,20000,1])
-    end -= 100
+  print("pre2_finish")
 
-    for p in range(model_n):
-      pre_data = np.round(model[i].predict(voice))
-      if pre_data[0] == 1:
-        ans[p] += 1
+  print(ans)
+  pre_ans = ans
 
-  ans = np.empty(0)
+  ans = []
   for i in range(model_n):
-    if i < 44 and ans[i] >= 14:
-      str = '{:0=2}'.format((i + 1) % 44)
-      if str not in ans:
-        ans = np.append(ans,str)
+      i = tf.convert_to_tensor(i, dtype=tf.int64)
 
-    elif i >= 44 and ans[i] >= 14:
-      str = '{:0=2}'.format((i + 1) % 44)
-      if str not in ans:
-        ans = np.append(ans,str)
+      if i < 44 and pre_ans[i] >= loop - 1:
+          str = '{:0=2}'.format((i + 1) % 44)
+          if str not in ans:
+              ans.append(str)
 
+      elif i >= 44 and pre_ans[i] >= loop - 1:
+          str = '{:0=2}'.format((i + 1) % 44)
+          if str not in ans:
+              ans.append(str)
+              
   return ans
