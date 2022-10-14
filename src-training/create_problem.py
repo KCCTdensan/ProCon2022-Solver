@@ -49,6 +49,8 @@ def create(loops:int,voice_num,gg):
 
         num = 0
         y[voice_num] = random.randint(0,1)
+        if y[voice_num] == 1:
+            mix -= 1
         while num < mix:
             ran_num = random.randint(0,nb_voice - 1)
             if y[ran_num] == 0:
