@@ -2,7 +2,7 @@
 
 import os
 
-#os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
+os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
 
 import tensorflow as tf
 
@@ -46,7 +46,7 @@ def step_decay(epoch):
         lr/=2
     return lr
 
-for i in range(44,88):
+for i in range(88):
     print(f'\nvoice_num = {i}')
 
     data_x,data_y = create_problem.create(nb_training,i)
@@ -101,8 +101,8 @@ for i in range(44,88):
     plt.xlabel("epoch")
     plt.legend()
     
-    plt.savefig(f"train/voice_correct_in{i}.png")
-    model.save(f"train/voice_correct_in{i}.h5")
+    plt.savefig(f"train/voice_correct_in{i}_light.png")
+    model.save(f"train/voice_correct_in{i}_light.h5")
 
     K.clear_session()
     gc.collect()
