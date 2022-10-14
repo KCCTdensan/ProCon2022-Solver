@@ -97,6 +97,10 @@ Builder.load_string("""
   BoxLayout:
     Button:
       text: "ここで回答"
+  BoxLayout:
+    StrongButton:
+      text: "SOLVE"
+      on_press: root.solve_problem_event.set()
 
   # UIBottom
   BoxLayout:
@@ -112,6 +116,9 @@ Builder.load_string("""
         text: "+1"
         on_press: root.chunk_plus_event()
     BoxLayout:
+      Label:
+        id: current_chunks
+        text: "-"
       Label:
         id: current_ans
         text: "-"
@@ -214,10 +221,10 @@ class ProconUI(BoxLayout):
           ("0" + str(sat.second))[-2:]
         display(problem_id, sat_fmt, time_limit, data)
 
-        if not previewed:
-          print(f"{datetime.now()} [OK ] 問題情報が更新されたので解いてみました")
-          self.solve_problem_event.set()
-          previewed = True
+        # if not previewed:
+        #   print(f"{datetime.now()} [OK ] 問題情報が更新されたので解いてみました")
+        #   self.solve_problem_event.set()
+        #   previewed = True
 
       except Exception:
         print(f"{datetime.now()}       問題情報の取得に失敗しました")
@@ -280,12 +287,15 @@ class ProconUI(BoxLayout):
 
   def chunk_minus_event(self):
     self.current_chunks -= 1
+    if self.current_chunks < 0:
+      self.current_chunks = 0
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
+    self.ids.current_chunks.text = str(self.current_chunks)
   
   def chunk_plus_event(self):
     self.current_chunks += 1
+    if self.current_chunks > self.data_num:
+      self.current_chunks = self.data_num
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
-    try:
-      print(f"{self.data_num}")
-    except Exception:
-      pass
+    self.ids.current_chunks.text = str(self.current_chunks)
+
