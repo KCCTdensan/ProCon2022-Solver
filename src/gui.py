@@ -275,10 +275,11 @@ class ProconUI(BoxLayout):
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
         print(self.ans)
-        self.ans = ["01", "02", "03"]
+        self.ans = ["01"]
         ans = dict(problem_id=str(self.problem_name),answers=self.ans)
-        ans = json.dumps(ans)
-        print(ans)
+        # ans = json.dumps(ans)
+        # ans = ans.replace("\'", "\"")
+        # print(ans)
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
