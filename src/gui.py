@@ -147,14 +147,12 @@ class ProconUI(BoxLayout):
   update_match_event = trio.Event()
   solve_problem_event = trio.Event()
   submit_answer_event = trio.Event()
-  # chunk_minus_event = trio.Event()
-  # chunk_plus_event = trio.Event()
   timelimit = 0
   chunks_n = 0 # update_problem_handler, solve_problem_event
   ans = [] # solve_problem_handler
   previewed = False
   data_num = 0
-  current_chunks = 0
+  current_chunks = 0 # to load chunk
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -259,7 +257,7 @@ class ProconUI(BoxLayout):
         await self.solve_problem_event.wait()
         self.solve_problem_event = trio.Event()
 
-        ans = await solve(await get_wav(self.chunks_n), self.data_num)
+        ans = await solve(await get_wav(self.current_chunks), self.data_num)
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
