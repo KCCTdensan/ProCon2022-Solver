@@ -17,7 +17,7 @@ def initModel():
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
     models = load_model(f'./train/voice_correct_in{i}.h5')
-    light_models = load_model(f'./train/voice_correct_in{i}_light.h5')
+    light_models = load_model(f'./train_l/voice_correct_in{i}_light.h5')
     model.append(models)
     model_light.append(light_models)
   print("model loaded")
