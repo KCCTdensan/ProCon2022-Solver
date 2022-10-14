@@ -1,11 +1,13 @@
 from sklearn import preprocessing
 from tensorflow.python.keras.models import load_model
+import tensorflow as tf
 import numpy as np
 import librosa
 
 voice_len = 3000
 
 model = []
+model_light = []
 model_judge = []
 model_n = 88
 
@@ -14,10 +16,12 @@ def initModel():
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
     models = load_model(f'./train/voice_correct_in{i}.h5')
+    light_models = load_model(f'./train/voice_correct_in{i}_light.h5')
     model.append(models)
+    model_light.append(light_models)
   print("model loaded")
 
-async def solve(f):
+async def solve(f,stack_num):
   voice, sr = librosa.load(f,sr=48000)
   voice_len = len(voice)
 
@@ -63,7 +67,10 @@ async def solve(f):
   for p in leng:
     p = tf.convert_to_tensor(p, dtype=tf.int64)
 
-    pre_data = tf.round(model[p].predict(x_list))
+    if stack_num > 8:
+      pre_data = tf.round(model[p].predict(x_list))
+    else:
+      pre_data = tf.round(model_light[p].predict(x_list))
     #print(pre_data)
     for i in range(len(pre_data)):
       if pre_data[i][0] == 1:
