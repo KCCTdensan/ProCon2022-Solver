@@ -1,6 +1,7 @@
 import trio
 
 from time import time
+import json
 from datetime import datetime
 
 import japanize_kivy
@@ -153,6 +154,8 @@ class ProconUI(BoxLayout):
   previewed = False
   data_num = 0
   current_chunks = 0 # to load chunk
+  problem_get_time = 0
+  problem_name = ""
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -201,7 +204,9 @@ class ProconUI(BoxLayout):
         self.update_problem_event = trio.Event()
 
         res = await get_problem()
+        self.problem_get_time = int(time())
         self.data_num = res["data"]
+        self.problem_name = res["id"]
         print(f"{datetime.now()}       問題情報を取得しました")
         problem_id  = res["id"]
         starts_at   = res["starts_at"]
@@ -271,7 +276,10 @@ class ProconUI(BoxLayout):
       try:
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
-
+        print(ans)
+        ans = dict(problem_id=str(self.problem_name),answers=str(ans),accepted_at=int(self.problem_get_time))
+        #ans = json.dumps(ans)
+        print(ans)
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
@@ -285,8 +293,8 @@ class ProconUI(BoxLayout):
 
   def chunk_minus_event(self):
     self.current_chunks -= 1
-    if self.current_chunks < 0:
-      self.current_chunks = 0
+    if self.current_chunks < 1:
+      self.current_chunks = 1
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
   
