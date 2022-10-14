@@ -275,8 +275,8 @@ class ProconUI(BoxLayout):
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
         print(self.ans)
-        self.ans = ["01", "02"]
-        ans = dict(problem_id=str(self.problem_name),answers=self.ans,accepted_at=int(self.problem_get_time))
+        self.ans = ["01", "02", "03"]
+        ans = dict(problem_id=str(self.problem_name),answers=self.ans)
         ans = json.dumps(ans)
         print(ans)
         res = await submit_problem(ans)
