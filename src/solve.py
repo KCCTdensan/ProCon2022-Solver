@@ -12,6 +12,7 @@ model_judge = []
 model_n = 88
 
 def initModel():
+  return
   model_judge.append(load_model(f'./train/voice_judge.h5'))
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
@@ -27,13 +28,14 @@ async def solve(f,stack_num):
 
   loop = int(((voice_len - 20000)) / 100)
   if loop > 50:
-    loop_list = range(int(loop/2 - 25),int(loop/2 + 25))
     loop = 50
-  else:
     loop_list = range(loop)
+  else:
+    loop_list = range(int(loop / 2))
   print(loop)
 
   x_list = []
+  end_num = voice_len - voice_len % 100
   for i in loop_list:
     i = tf.convert_to_tensor(i, dtype=tf.int64)
 
@@ -42,6 +44,14 @@ async def solve(f,stack_num):
     x = preprocessing.scale(x)
     x = x[:10000]
     x_list.append(x)
+
+    x = voice[end_num - 20000 : end_num]
+    x = tf.abs(np.fft.fft(x))
+    x = preprocessing.scale(x)
+    x = x[:10000]
+    x_list.append(x)
+    end_num -= 100
+
   x_list = tf.reshape(x_list,[loop,10000,1])
   print('problem_load_finish')
 
@@ -85,12 +95,12 @@ async def solve(f,stack_num):
   for i in leng:
     i = tf.convert_to_tensor(i, dtype=tf.int64)
 
-    if i < 44 and pre_ans[i] >= loop - int(loop / 3):
+    if i < 44 and pre_ans[i] >= loop - int(loop / 10):
       str = '{:0=2}'.format((i + 1) % 44)
       if str not in ans:
         ans.append(str)
 
-    elif i >= 44 and pre_ans[i] >= loop - int(loop / 3):
+    elif i >= 44 and pre_ans[i] >= loop - int(loop / 10):
       str = '{:0=2}'.format((i) - 43)
       if str not in ans:
         ans.append(str)
