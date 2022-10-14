@@ -28,7 +28,7 @@ async def solve(f,stack_num):
 
   loop = int(((voice_len - 20000)) / 100)
   if loop > 50:
-    loop = 50
+    loop = 25
     loop_list = range(loop)
   else:
     loop_list = range(int(loop / 2))
