@@ -132,6 +132,7 @@ class ProconUI(BoxLayout):
   submit_answer_event = trio.Event()
   timelimit = 0
   chunks_n = 0 # update_problem_handler, solve_problem_event
+  ans = [] # solve_problem_handler
   previewed = False
 
   def __init__(self, nursery, **kwargs):
@@ -236,11 +237,13 @@ class ProconUI(BoxLayout):
         await self.solve_problem_event.wait()
         self.solve_problem_event = trio.Event()
 
-        ans = solve(await get_wav(self.chunks_n))
-        print(f"{datetime.now()} [OK ] 問題を解きました")
+        ans = await solve(await get_wav(self.chunks_n))
+        print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
-      except Exception as e:
-        print(e)
+        # preview
+        self.ids.current_ans.text = str(ans)
+
+      except Exception:
         print(f"{datetime.now()} [ERR] 問題が解けませんでした")
 
   async def submit_answer_handler(self):
