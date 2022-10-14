@@ -107,12 +107,10 @@ Builder.load_string("""
   BoxLayout:
     size_hint_y: 0.3
     BoxLayout:
-      size_hint_y: 0.3
       StrongButton:
         text: "-1"
         on_press: root.chunk_minus_event()
-    BoxLayout:
-      size_hint_y: 0.3
+    BoxLayout
       StrongButton:
         text: "+1"
         on_press: root.chunk_plus_event()
@@ -276,9 +274,10 @@ class ProconUI(BoxLayout):
       try:
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
-        print(ans)
-        ans = dict(problem_id=str(self.problem_name),answers=str(ans),accepted_at=int(self.problem_get_time))
-        #ans = json.dumps(ans)
+        print(self.ans)
+        self.ans = ["01", "02"]
+        ans = dict(problem_id=str(self.problem_name),answers=self.ans,accepted_at=int(self.problem_get_time))
+        ans = json.dumps(ans)
         print(ans)
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
