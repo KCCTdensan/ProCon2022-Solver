@@ -242,7 +242,8 @@ class ProconUI(BoxLayout):
         self.problem_name = res["id"]
         print(f"{datetime.now()}       問題情報を取得しました")
         problem_id  = res["id"]
-        starts_at   = res["starts_at"]
+        # starts_at   = res["starts_at"]
+        starts_at   = res["start_at"]
         time_limit  = res["time_limit"]
         data        = res["data"]
         self.chunks_n   = res["chunks"]
