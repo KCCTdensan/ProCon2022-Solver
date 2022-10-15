@@ -89,9 +89,9 @@ async def solve(f,stack_num):
 
   ans_l = d.keys()
 
-  for i in ans_l:
-    if int(i) > 44:
-      i = '{:0=2}'.format(int(i) - 44)
+  for i in range(len(ans_l)):
+    if int(ans_l[i]) > 44:
+      ans_l[i] = '{:0=2}'.format(int(i) - 44)
 
   print(ans_l)
   ans = ans_l
