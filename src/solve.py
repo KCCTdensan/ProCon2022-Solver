@@ -9,6 +9,7 @@ voice_len = 3000
 model = []
 model_light = []
 model_judge = []
+model_8 = []
 model_n = 88
 
 def initModel():
@@ -17,8 +18,10 @@ def initModel():
     i = tf.convert_to_tensor(i, dtype=tf.int64)
     models = load_model(f'./train/voice_correct_in{i}.h5')
     light_models = load_model(f'./train_l/voice_correct_in{i}_light.h5')
+    model_8_sr = load_model(f'./train_8/voice_correct_in{i}.h5')
     model.append(models)
     model_light.append(light_models)
+    model_8.append(model_8_sr)
   print("model loaded")
 
 async def solve(f,stack_num):
@@ -65,6 +68,8 @@ async def solve(f,stack_num):
 
     if stack_num > 8:
       pre_data = tf.round(model[p].predict(x_list))
+    elif stack_num == 8:
+      pre_data = tf.round(model_8[p].predict(x_list))
     else:
       pre_data = tf.round(model_light[p].predict(x_list))
     #print(pre_data)
