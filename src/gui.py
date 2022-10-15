@@ -409,6 +409,7 @@ class ProconUI(BoxLayout):
     for i in range(44):
       self.ids["check_{0}".format(i)].state = "normal"
       self.ids["check_{0}".format(i)].disabled = False
+      self.ids["check_{0}".format(i)].color = (1,1,1,1)
       self.submit_check[i] = False
 
   def chunk_minus_event(self):
