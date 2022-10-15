@@ -79,6 +79,10 @@ async def solve(f,stack_num):
     str_len.append(str(i+1))
 
   d = list(zip(str_len, ans))
+  for i in range(str_len):
+    ssss = int(d[i][0])
+    if ssss > 43:
+      d[i][0] = str(ssss-43)
   d.sort(key=lambda x: x[1], reverse=True)
   print(d[:stack_num])
 
