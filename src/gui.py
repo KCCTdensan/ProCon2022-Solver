@@ -120,6 +120,7 @@ for i in range(44):
 ui += """
   BoxLayout:
     size_hint_y: 0.3
+    padding: 8
     StrongButton:
       size_hint_x: 1
       text: "SOLVE"
@@ -309,8 +310,10 @@ class ProconUI(BoxLayout):
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
         for i in ans:
           self.ids["label_{0}".format(int(i))].text = str(int(i)+1)+str("◎")
+          self.ids["label_{0}".format(int(i))].color = (1,0,0,1)
           self.ids["check_{0}".format(int(i))].state = "down"
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
@@ -323,6 +326,9 @@ class ProconUI(BoxLayout):
         for i in range(len(self.check)):
           self.check[i] = BooleanProperty(False)
           self.submit_check[i] = False
+        for i in range(44):
+          self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
         print(self.submit_check)
 
 
