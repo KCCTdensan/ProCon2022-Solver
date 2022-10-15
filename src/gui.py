@@ -407,15 +407,15 @@ class ProconUI(BoxLayout):
 
   def chunk_minus_event(self):
     self.current_chunks -= 1
-    if self.current_chunks < 1:
-      self.current_chunks = 1
+    if self.current_chunks < 0:
+      self.current_chunks = 0
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
   
   def chunk_plus_event(self):
     self.current_chunks += 1
-    if self.current_chunks > self.data_num:
-      self.current_chunks = self.data_num
+    if self.current_chunks >= self.chunks_n:
+      self.current_chunks = self.chunks_n-1
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
 
