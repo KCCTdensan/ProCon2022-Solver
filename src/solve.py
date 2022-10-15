@@ -78,7 +78,7 @@ async def solve(f,stack_num):
   for i in range(88):
     str_len.append(str(i+1))
 
-  d = zip(str_len, ans)
+  d = list(zip(str_len, ans))
   d.sort(key=lambda x: x[1], reverse=True)
   print(d[:stack_num])
 
