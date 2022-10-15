@@ -316,6 +316,7 @@ class ProconUI(BoxLayout):
           self.ids["label_{0}".format(int(i))].color = (1,0,0,1)
           if not self.ids["check_{0}".format(int(i))].disabled:
             self.ids["check_{0}".format(int(i))].state = "down"
+            self.submit_check[i] = True
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
