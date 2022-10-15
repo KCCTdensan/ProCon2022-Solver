@@ -94,6 +94,7 @@ async def solve(f,stack_num):
       i = '{:0=2}'.format(int(i) - 44)
 
   print(ans_l)
+  ans = ans_l
 
   '''print(ans)
   pre_ans = ans
