@@ -79,7 +79,8 @@ async def solve(f,stack_num):
     str_len.append(str(i+1))
 
   d = dict(zip(str_len, ans))
-  print(sorted(d.items()))
+  d = sorted(d.items())
+  print(d)
 
   print(ans)
   pre_ans = ans
