@@ -70,11 +70,11 @@ async def get_wav(chunk_n):
 
   chunks = {}
   async with trio.open_nursery() as nursery:
-    for name in chunk_names:
-      async def store_chunk(name): # there is no async lambda
-        print(f"{datetime.now()}       GET /problem/chunks/{name}")
-        chunks[name] = await get_chunk(name)
-      nursery.start_soon(store_chunk, name)
+    # for name in chunk_names:
+    async def store_chunk(name): # there is no async lambda
+      print(f"{datetime.now()}       GET /problem/chunks/{name}")
+      chunks[name] = await get_chunk(name)
+    nursery.start_soon(store_chunk, name)
   print(f"{datetime.now()} [OK ] all chunks got successfully")
 
   f = tempfile.NamedTemporaryFile()
