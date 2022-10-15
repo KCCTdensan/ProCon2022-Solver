@@ -3,6 +3,7 @@ import trio
 from time import time
 import json
 from datetime import datetime
+import textwrap
 
 import japanize_kivy
 from kivy.app import App
@@ -304,7 +305,7 @@ class ProconUI(BoxLayout):
         print(f"{datetime.now()}       試合情報の取得に失敗しました")
         display("-", "-", "-")
 
-      self.ids.current_chunks.text = str(self.current_chunks)
+      self.ids.current_chunks.text = str(self.current_chunks)+":取得チャンク数="+str(self.current_chunks+1)
 
   async def solve_problem_handler(self):
     while True:
@@ -312,23 +313,28 @@ class ProconUI(BoxLayout):
         await self.solve_problem_event.wait()
         self.solve_problem_event = trio.Event()
 
-        ans = await solve(await get_wav(self.current_chunks), self.data_num)
-        # ans = ["01", "02", "03"]
+        # ans = await solve(await get_wav(self.current_chunks), self.data_num)
+        ans = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
-        self.dye_submitted()
+          self.ids["label_{0}".format(i)].bold = False
         for i in ans:
           print(i)
           self.ids["label_{0}".format(int(i)-1)].text = str(int(i))+str("◎")
           self.ids["label_{0}".format(int(i)-1)].color = (1,0,0,1)
+          self.ids["label_{0}".format(int(i)-1)].bold = True
           if not self.ids["check_{0}".format(int(i)-1)].disabled:
             self.ids["check_{0}".format(int(i)-1)].state = "down"
             self.submit_check[int(i)-1] = True
+        self.dye_submitted()
+
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
-        self.ids.current_ans.text = str(ans)
+        ans_prev = str(ans)
+        ans_prev = textwrap.wrap(ans_prev, 34)
+        self.ids.current_ans.text = '\n'.join(ans_prev)
 
       except Exception as e:
         print(e)
@@ -410,14 +416,14 @@ class ProconUI(BoxLayout):
     if self.current_chunks < 0:
       self.current_chunks = 0
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
-    self.ids.current_chunks.text = str(self.current_chunks)
+    self.ids.current_chunks.text = str(self.current_chunks)+":取得チャンク数="+str(self.current_chunks+1)
   
   def chunk_plus_event(self):
     self.current_chunks += 1
     if self.current_chunks >= self.chunks_n:
       self.current_chunks = self.chunks_n-1
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
-    self.ids.current_chunks.text = str(self.current_chunks)
+    self.ids.current_chunks.text = str(self.current_chunks)+":取得チャンク数="+str(self.current_chunks+1)
 
   def toggle_num(self, num, checkbox):
     print(num)
@@ -436,4 +442,6 @@ class ProconUI(BoxLayout):
   def dye_submitted(self):
     for item in self.submitted_ans:
       self.ids["label_{0}".format(int(item)-1)].color = (98/255,220/255,255/255,1)
+      self.ids["label_{0}".format(int(item)-1)].bold = True
+      self.ids["label_{0}".format(int(item)-1)].italic = True
         
