@@ -308,11 +308,10 @@ class ProconUI(BoxLayout):
 
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
         for i in range(44):
-          for j in range(len(ans)):
-            if int(ans[j]) == i+1:
-              self.ids["label_{0}".format(i)].text = str(i+1)+str("◎")
-            else:
-              self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].text = str(i+1)
+        for i in ans:
+          self.ids["label_{0}".format(int(i))].text = str(int(i)+1)+str("◎")
+          self.ids["check_{0}".format(int(i))].state = "down"
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
@@ -333,16 +332,12 @@ class ProconUI(BoxLayout):
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
         ans = list([])
-        print(self.ans_list)
         for i in range(44):
           if self.submit_check[i]:
             ans.append(str(self.ans_list[i]))
             # print(ans)
-        print(ans)
+        print("提出解答:",ans)
         ans = dict(problem_id=str(self.problem_name),answers=ans)
-        # ans = json.dumps(ans)
-        # ans = ans.replace("\'", "\"")
-        # print(ans)
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
@@ -355,8 +350,6 @@ class ProconUI(BoxLayout):
         self.submit_check = [False for i in range(44)]
         self.submit_check_obj.clear()
         print("チェックボタンの無効化")
-
-        print(self.ids.items())
 
       except AnswerException:
         self.ids.server_res.text = "Answered: invalid"
