@@ -10,6 +10,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.config import Config
 from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty, BooleanProperty
 
 from .solve import *
 from .api import *
@@ -20,7 +21,7 @@ Config.set("graphics", "resizable", "0")
 Config.set("graphics", "width", "1200")
 Config.set("graphics", "height", "640")
 
-Builder.load_string("""
+ui = """
 <StrongButton@Button>:
   font_name: "assets/Roboto-Bold.ttf"
   font_size: 20
@@ -96,8 +97,27 @@ Builder.load_string("""
 
   # UIMiddle
   BoxLayout:
-    Button:
-      text: "ここで回答"
+    orientation: "vertical"
+"""
+
+for i in range(44):
+  if i % 10 == 0:
+    ui += f"""
+    BoxLayout:
+    """
+  ui += """
+      BoxLayout:
+        orientation: "vertical"
+        Label:
+          text: "{0}"
+        CheckBox:
+          id: check_{1}
+          value: root.check[{2}]
+          on_press: root.toggle_num({3}, self)
+  """.format(i+1, i, i, i)
+
+ui += """
+    
   BoxLayout:
     StrongButton:
       text: "SOLVE"
@@ -131,7 +151,11 @@ Builder.load_string("""
       StrongButton:
         text: "Submit"
         on_press: root.submit_answer_event.set()
-""")
+"""
+
+print(ui)
+
+Builder.load_string(ui)
 
 ## 今は使ってない
 ## ProconApp().async_run(async_lib="trio")
@@ -154,6 +178,9 @@ class ProconUI(BoxLayout):
   current_chunks = 0 # to load chunk
   problem_get_time = 0
   problem_name = ""
+  check = [BooleanProperty(False) for i in range(44)]
+  submit_check = [False for i in range(44)]
+  ans_list = [str("{:0=2}".format(i+1)) for i in range(44)]
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -261,6 +288,11 @@ class ProconUI(BoxLayout):
         self.solve_problem_event = trio.Event()
 
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
+        for i in range(len(self.check)):
+          for j in range(len(ans)):
+            if int(ans[j]) == i+1:
+              self.check[i] = BooleanProperty(True)
+              self.submit_check[i] = True
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
@@ -268,15 +300,25 @@ class ProconUI(BoxLayout):
 
       except Exception:
         print(f"{datetime.now()} [ERR] 問題が解けませんでした")
+        for i in range(len(self.check)):
+          self.check[i] = BooleanProperty(False)
+          self.submit_check[i] = False
+        print(self.submit_check)
+
 
   async def submit_answer_handler(self):
     while True:
       try:
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
-        print(self.ans)
-        self.ans = ["01"]
-        ans = dict(problem_id=str(self.problem_name),answers=self.ans)
+        ans = list([])
+        print(self.ans_list)
+        for i in range(44):
+          if self.submit_check[i]:
+            ans.append(str(self.ans_list[i]))
+            # print(ans)
+        print(ans)
+        ans = dict(problem_id=str(self.problem_name),answers=ans)
         # ans = json.dumps(ans)
         # ans = ans.replace("\'", "\"")
         # print(ans)
@@ -304,4 +346,10 @@ class ProconUI(BoxLayout):
       self.current_chunks = self.data_num
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
+
+  def toggle_num(self, num, checkbox):
+    print(num)
+    self.submit_check[num] = checkbox.active
+    print(self.submit_check[num])
+    print(self.submit_check)
 
