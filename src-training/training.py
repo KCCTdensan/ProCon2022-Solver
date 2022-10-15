@@ -34,7 +34,10 @@ np.set_printoptions(edgeitems=10)
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 50000
+nb_training = 70000
+
+
+
 problem_len = 10000
 nb_voice = 88
 
