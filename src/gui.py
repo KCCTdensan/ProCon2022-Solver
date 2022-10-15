@@ -124,6 +124,7 @@ ui += """
     StrongButton:
       size_hint_x: 1
       text: "SOLVE"
+      background_color: (97/255,191/255,215/255,1)
       on_press: root.solve_problem_event.set()
     StrongButton:
       text: "C"
@@ -164,6 +165,8 @@ ui += """
       padding: 8
       StrongButton:
         text: "Submit"
+        color: (1,1,0,1)
+        background_color: (59/255,231/255,157/255,1)
         on_press: root.submit_answer_event.set()
 """
 
