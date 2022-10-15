@@ -66,32 +66,18 @@ async def get_wav(chunk_n):
   res = await post_json(f"/problem/chunks?n={chunk_n}")
   if res.status_code != httpx.codes.OK:
     raise
-  chunk_names = res.json()["chunks"]
-
-  chunks = {}
-  async with trio.open_nursery() as nursery:
-    # for name in chunk_names:
-    async def store_chunk(name): # there is no async lambda
-      print(f"{datetime.now()}       GET /problem/chunks/{name}")
-      chunks[name] = await get_chunk(name)
-    nursery.start_soon(store_chunk, name)
-  print(f"{datetime.now()} [OK ] all chunks got successfully")
+  name = res.json()["chunks"][chunk_n]
+  chunk = await get_chunk(name)
+  print(f"{datetime.now()} [OK ] chunk {name} got successfully")
 
   f = tempfile.NamedTemporaryFile()
   with wave.open(f, "wb") as w:
-    chunk_first = chunks[chunk_names[0]]
-    with wave.open(chunk_first, "rb") as w_first:
+    with wave.open(chunk, "rb") as w_first:
       w.setparams(w_first.getparams())
       print(f"{datetime.now()} [OK ] setting wave params : {w_first.getparams()}")
-    chunk_first.seek(0)
+    chunk.seek(0)
 
-    for name in chunk_names:
-      f_chunk = chunks[name]
-      with wave.open(f_chunk, "rb") as w_chunk:
-        w.writeframes(w_chunk.readframes(w_chunk.getnframes()))
-
-  for name in chunk_names:
-    chunks[name].close()
+  chunk.close()
 
   print(f"{datetime.now()} [OK ] wave generated : {f.name}")
   f.seek(0)

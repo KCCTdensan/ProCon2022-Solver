@@ -298,7 +298,8 @@ class ProconUI(BoxLayout):
         # preview
         self.ids.current_ans.text = str(ans)
 
-      except Exception:
+      except Exception as e:
+        print(e)
         print(f"{datetime.now()} [ERR] 問題が解けませんでした")
         for i in range(len(self.check)):
           self.check[i] = BooleanProperty(False)
