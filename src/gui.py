@@ -109,20 +109,27 @@ for i in range(44):
       BoxLayout:
         orientation: "vertical"
         Label:
+          id: label_{4}
           text: "{0}"
         CheckBox:
           id: check_{1}
           value: root.check[{2}]
           on_press: root.toggle_num({3}, self)
-  """.format(i+1, i, i, i)
+  """.format(i+1, i, i, i, i)
 
 ui += """
   BoxLayout:
     size_hint_y: 0.3
     StrongButton:
-      size_hint_x: 2
+      size_hint_x: 1
       text: "SOLVE"
       on_press: root.solve_problem_event.set()
+    StrongButton:
+      text: "C"
+      on_press: root.clear_cheks()
+    StrongButton:
+      text: "AC"
+      on_press: root.all_clear_cheks()
     Label:
       id: ping
       text: "-"
@@ -187,6 +194,7 @@ class ProconUI(BoxLayout):
   check = [BooleanProperty(False) for i in range(44)]
   submit_check = [False for i in range(44)]
   ans_list = [str("{:0=2}".format(i+1)) for i in range(44)]
+  submit_check_obj = []
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -299,12 +307,12 @@ class ProconUI(BoxLayout):
         self.solve_problem_event = trio.Event()
 
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
-        for i in range(len(self.check)):
+        for i in range(44):
           for j in range(len(ans)):
             if int(ans[j]) == i+1:
-              #self.check[i] = BooleanProperty(True)
-              #self.submit_check[i] = True
-              pass
+              self.ids["label_{0}".format(i)].text = str(i+1)+str("◎")
+            else:
+              self.ids["label_{0}".format(i)].text = str(i+1)
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
@@ -340,6 +348,16 @@ class ProconUI(BoxLayout):
         # display result
         self.ids.server_res.text = "Answered: " + str(res["answers"])
 
+        for checks in self.submit_check_obj:
+          checks.state = "normal"
+          checks.disabled = True
+
+        self.submit_check = [False for i in range(44)]
+        self.submit_check_obj.clear()
+        print("チェックボタンの無効化")
+
+        print(self.ids.items())
+
       except AnswerException:
         self.ids.server_res.text = "Answered: invalid"
         print(f"{datetime.now()} [ERR] 回答の形式が不正です")
@@ -348,6 +366,24 @@ class ProconUI(BoxLayout):
         self.ids.server_res.text = "Answered: failed"
         print(f"{datetime.now()} [ERR] 問題の提出に失敗しました")
 
+        for checks in self.submit_check_obj:
+          checks.state = "normal"
+          checks.disabled = True
+
+        # self.submit_check = []
+        self.submit_check_obj.clear()
+        print("チェックボタンの無効化")
+
+  def clear_cheks(self):
+    for i in range(44):
+      self.ids["check_{0}".format(i)].state = "normal"
+      self.submit_check[i] = False
+
+  def all_clear_cheks(self):
+    for i in range(44):
+      self.ids["check_{0}".format(i)].state = "normal"
+      self.ids["check_{0}".format(i)].disabled = False
+      self.submit_check[i] = False
 
   def chunk_minus_event(self):
     self.current_chunks -= 1
@@ -368,3 +404,11 @@ class ProconUI(BoxLayout):
     self.submit_check[num] = checkbox.active
     print(self.submit_check[num])
     print(self.submit_check)
+
+    if self.submit_check[num]:
+      self.submit_check_obj.append(checkbox)
+    else:
+      try:
+        self.submit_check_obj.remove(checkbox)
+      except Exception:
+        print("passed")
