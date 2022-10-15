@@ -84,9 +84,19 @@ async def solve(f,stack_num):
     if ssss > 43:
       d[i][0] = str(ssss-43)
   d.sort(key=lambda x: x[1], reverse=True)
-  print(d[:stack_num])
+  d = d[:stack_num]
+  print()
 
-  print(ans)
+  ans_l = d.keys()
+
+  for i in range(len(ans_l)):
+    if int(ans_l[i]) > 44:
+      ans_l[i] = '{:0=2}'.format(int(i) - 44)
+
+  print(ans_l)
+  ans = ans_l
+
+  '''print(ans)
   pre_ans = ans
   ans = []
   for i in leng:
@@ -102,6 +112,6 @@ async def solve(f,stack_num):
       if str_l not in ans:
         ans.append(str_l)
 
-  print(ans)
+  print(ans)'''
 
   return ans

@@ -109,20 +109,29 @@ for i in range(44):
       BoxLayout:
         orientation: "vertical"
         Label:
+          id: label_{4}
           text: "{0}"
         CheckBox:
           id: check_{1}
           value: root.check[{2}]
           on_press: root.toggle_num({3}, self)
-  """.format(i+1, i, i, i)
+  """.format(i+1, i, i, i, i)
 
 ui += """
   BoxLayout:
     size_hint_y: 0.3
+    padding: 8
     StrongButton:
-      size_hint_x: 2
+      size_hint_x: 1
       text: "SOLVE"
+      background_color: (97/255,191/255,215/255,1)
       on_press: root.solve_problem_event.set()
+    StrongButton:
+      text: "C"
+      on_press: root.clear_cheks()
+    StrongButton:
+      text: "AC"
+      on_press: root.all_clear_cheks()
     Label:
       id: ping
       text: "-"
@@ -156,6 +165,8 @@ ui += """
       padding: 8
       StrongButton:
         text: "Submit"
+        color: (1,1,0,1)
+        background_color: (59/255,231/255,157/255,1)
         on_press: root.submit_answer_event.set()
 """
 
@@ -187,6 +198,7 @@ class ProconUI(BoxLayout):
   check = [BooleanProperty(False) for i in range(44)]
   submit_check = [False for i in range(44)]
   ans_list = [str("{:0=2}".format(i+1)) for i in range(44)]
+  submitted_ans = []
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -292,6 +304,8 @@ class ProconUI(BoxLayout):
         print(f"{datetime.now()}       試合情報の取得に失敗しました")
         display("-", "-", "-")
 
+      self.ids.current_chunks.text = str(self.current_chunks)
+
   async def solve_problem_handler(self):
     while True:
       try:
@@ -299,12 +313,18 @@ class ProconUI(BoxLayout):
         self.solve_problem_event = trio.Event()
 
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
-        for i in range(len(self.check)):
-          for j in range(len(ans)):
-            if int(ans[j]) == i+1:
-              #self.check[i] = BooleanProperty(True)
-              #self.submit_check[i] = True
-              pass
+        # ans = ["01", "02", "03"]
+        for i in range(44):
+          self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
+        self.dye_submitted()
+        for i in ans:
+          print(i)
+          self.ids["label_{0}".format(int(i)-1)].text = str(int(i))+str("◎")
+          self.ids["label_{0}".format(int(i)-1)].color = (1,0,0,1)
+          if not self.ids["check_{0}".format(int(i)-1)].disabled:
+            self.ids["check_{0}".format(int(i)-1)].state = "down"
+            self.submit_check[int(i)-1] = True
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
@@ -316,8 +336,12 @@ class ProconUI(BoxLayout):
         for i in range(len(self.check)):
           self.check[i] = BooleanProperty(False)
           self.submit_check[i] = False
-        print(self.submit_check)
+        for i in range(44):
+          self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
+          self.ids["check_{0}".format(i)].state = "normal"
 
+        self.dye_submitted()
 
   async def submit_answer_handler(self):
     while True:
@@ -325,20 +349,35 @@ class ProconUI(BoxLayout):
         await self.submit_answer_event.wait()
         self.submit_answer_event = trio.Event()
         ans = list([])
-        print(self.ans_list)
         for i in range(44):
           if self.submit_check[i]:
             ans.append(str(self.ans_list[i]))
             # print(ans)
-        print(ans)
+        print("提出解答:",ans)
         ans = dict(problem_id=str(self.problem_name),answers=ans)
-        # ans = json.dumps(ans)
-        # ans = ans.replace("\'", "\"")
-        # print(ans)
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
         self.ids.server_res.text = "Answered: " + str(res["answers"])
+
+        for i in range(44):
+          if self.submit_check[i]:
+            self.ids["check_{0}".format(i)].state = "normal"
+            self.ids["check_{0}".format(i)].disabled = True
+        
+        for i in range(44):
+          self.ids["label_{0}".format(i)].text = str(i+1)
+          self.ids["label_{0}".format(i)].color = (1,1,1,1)
+
+        for item in res["answers"]:
+          self.submitted_ans.append(item)
+
+        self.dye_submitted()
+        self.ids["label_{0}".format(int(item)-1)].color = (98/255,220/255,255/255,1)
+
+        self.submit_check = [False for i in range(44)]
+        self.clear_cheks()
+        print("チェックボタンの無効化")
 
       except AnswerException:
         self.ids.server_res.text = "Answered: invalid"
@@ -348,18 +387,35 @@ class ProconUI(BoxLayout):
         self.ids.server_res.text = "Answered: failed"
         print(f"{datetime.now()} [ERR] 問題の提出に失敗しました")
 
+        for i in range(44):
+          if self.submit_check[i]:
+            self.ids["check_{0}".format(i)].state = "normal"
+            self.ids["check_{0}".format(i)].disabled = True
+
+        print("チェックボタンの無効化")
+
+  def clear_cheks(self):
+    for i in range(44):
+      self.ids["check_{0}".format(i)].state = "normal"
+      self.submit_check[i] = False
+
+  def all_clear_cheks(self):
+    for i in range(44):
+      self.ids["check_{0}".format(i)].state = "normal"
+      self.ids["check_{0}".format(i)].disabled = False
+      self.submit_check[i] = False
 
   def chunk_minus_event(self):
     self.current_chunks -= 1
-    if self.current_chunks < 1:
-      self.current_chunks = 1
+    if self.current_chunks < 0:
+      self.current_chunks = 0
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
   
   def chunk_plus_event(self):
     self.current_chunks += 1
-    if self.current_chunks > self.data_num:
-      self.current_chunks = self.data_num
+    if self.current_chunks >= self.chunks_n:
+      self.current_chunks = self.chunks_n-1
     print(f"{datetime.now()} [INF] 現在のCHUNK指定: {self.current_chunks}")
     self.ids.current_chunks.text = str(self.current_chunks)
 
@@ -368,3 +424,16 @@ class ProconUI(BoxLayout):
     self.submit_check[num] = checkbox.active
     print(self.submit_check[num])
     print(self.submit_check)
+
+    # if self.submit_check[num]:
+    #   self.submit_check_obj.append(checkbox)
+    # else:
+    #   try:
+    #     self.submit_check_obj.remove(checkbox)
+    #   except Exception:
+    #     print("passed")
+
+  def dye_submitted(self):
+    for item in self.submitted_ans:
+      self.ids["label_{0}".format(int(item)-1)].color = (98/255,220/255,255/255,1)
+        
