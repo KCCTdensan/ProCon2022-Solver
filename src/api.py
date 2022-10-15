@@ -18,18 +18,20 @@ def initApi(host, token):
   _token = token
 
 async def get(path):
-  url = f"https://{_host}{path}"
+  url = f"{_host}{path}"
   headers = { "procon-token": _token }
   async with httpx.AsyncClient() as client:
+    print("GET", url, headers)
     return await client.get(url, headers=headers)
 
 async def post_json(path, obj={}):
-  url = f"https://{_host}{path}"
+  url = f"{_host}{path}"
   headers = {
     "procon-token": _token,
     "Content-Type": "application/json",
   }
   async with httpx.AsyncClient() as client:
+    print("POST", url, headers, obj)
     return await client.post(url, json=obj, headers=headers)
 
 async def get_match():
