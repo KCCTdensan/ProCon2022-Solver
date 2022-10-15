@@ -46,7 +46,7 @@ def step_decay(epoch):
         lr/=2
     return lr
 
-for gg in range(3,19):
+for gg in range(6,8):
     for i in range(88):
         print(f'\nvoice_num = {i}')
 
