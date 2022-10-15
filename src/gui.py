@@ -313,8 +313,8 @@ class ProconUI(BoxLayout):
         await self.solve_problem_event.wait()
         self.solve_problem_event = trio.Event()
 
-        # ans = await solve(await get_wav(self.current_chunks), self.data_num)
-        ans = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
+        ans = await solve(await get_wav(self.current_chunks), self.data_num)
+        # ans = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"]
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
