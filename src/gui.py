@@ -308,15 +308,17 @@ class ProconUI(BoxLayout):
         self.solve_problem_event = trio.Event()
 
         ans = await solve(await get_wav(self.current_chunks), self.data_num)
+        # ans = ["01", "02", "03"]
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
         for i in ans:
-          self.ids["label_{0}".format(int(i))].text = str(int(i)+1)+str("◎")
-          self.ids["label_{0}".format(int(i))].color = (1,0,0,1)
-          if not self.ids["check_{0}".format(int(i))].disabled:
-            self.ids["check_{0}".format(int(i))].state = "down"
-            self.submit_check[i] = True
+          print(i)
+          self.ids["label_{0}".format(int(i)-1)].text = str(int(i))+str("◎")
+          self.ids["label_{0}".format(int(i)-1)].color = (1,0,0,1)
+          if not self.ids["check_{0}".format(int(i)-1)].disabled:
+            self.ids["check_{0}".format(int(i)-1)].state = "down"
+            self.submit_check[int(i)-1] = True
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
@@ -351,16 +353,18 @@ class ProconUI(BoxLayout):
         # display result
         self.ids.server_res.text = "Answered: " + str(res["answers"])
 
-        for checks in self.submit_check_obj:
-          checks.state = "normal"
-          checks.disabled = True
-
+        for i in range(44):
+          if self.submit_check[i]:
+            self.ids["check_{0}".format(i)].state = "normal"
+            self.ids["check_{0}".format(i)].disabled = True
+        
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (1,1,1,1)
 
         self.submit_check = [False for i in range(44)]
         self.submit_check_obj.clear()
+        self.clear_cheks()
         print("チェックボタンの無効化")
 
       except AnswerException:
