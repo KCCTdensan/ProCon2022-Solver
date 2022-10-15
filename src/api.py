@@ -63,7 +63,7 @@ async def get_chunk(name):
   raise
 
 async def get_wav(chunk_n):
-  res = await post_json(f"/problem/chunks?n={chunk_n}")
+  res = await post_json(f"/problem/chunks?n={1 if chunk_n == 0 else chunk_n}")
   if res.status_code != httpx.codes.OK:
     raise
   name = res.json()["chunks"][chunk_n]
