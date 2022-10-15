@@ -198,7 +198,7 @@ class ProconUI(BoxLayout):
   check = [BooleanProperty(False) for i in range(44)]
   submit_check = [False for i in range(44)]
   ans_list = [str("{:0=2}".format(i+1)) for i in range(44)]
-  submit_check_obj = []
+  submitted_ans = []
 
   def __init__(self, nursery, **kwargs):
     super().__init__(**kwargs)
@@ -304,6 +304,8 @@ class ProconUI(BoxLayout):
         print(f"{datetime.now()}       試合情報の取得に失敗しました")
         display("-", "-", "-")
 
+      self.ids.current_chunks.text = str(self.current_chunks)
+
   async def solve_problem_handler(self):
     while True:
       try:
@@ -315,6 +317,7 @@ class ProconUI(BoxLayout):
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
+        self.dye_submitted()
         for i in ans:
           print(i)
           self.ids["label_{0}".format(int(i)-1)].text = str(int(i))+str("◎")
@@ -337,8 +340,8 @@ class ProconUI(BoxLayout):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
           self.ids["check_{0}".format(i)].state = "normal"
-        print(self.submit_check)
 
+        self.dye_submitted()
 
   async def submit_answer_handler(self):
     while True:
@@ -365,6 +368,12 @@ class ProconUI(BoxLayout):
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (1,1,1,1)
+
+        for item in res["answers"]:
+          self.submitted_ans.append(item)
+
+        self.dye_submitted()
+        self.ids["label_{0}".format(int(item)-1)].color = (98/255,220/255,255/255,1)
 
         self.submit_check = [False for i in range(44)]
         self.clear_cheks()
@@ -416,10 +425,15 @@ class ProconUI(BoxLayout):
     print(self.submit_check[num])
     print(self.submit_check)
 
-    if self.submit_check[num]:
-      self.submit_check_obj.append(checkbox)
-    else:
-      try:
-        self.submit_check_obj.remove(checkbox)
-      except Exception:
-        print("passed")
+    # if self.submit_check[num]:
+    #   self.submit_check_obj.append(checkbox)
+    # else:
+    #   try:
+    #     self.submit_check_obj.remove(checkbox)
+    #   except Exception:
+    #     print("passed")
+
+  def dye_submitted(self):
+    for item in self.submitted_ans:
+      self.ids["label_{0}".format(int(item)-1)].color = (98/255,220/255,255/255,1)
+        
