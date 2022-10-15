@@ -5,7 +5,7 @@ import numpy as np
 import random
 import librosa
 
-def create(loops:int,voice_num,gg):
+def create(loops:int,voice_num):
 
     nb_voice = 88
     max_len = 400000
@@ -43,7 +43,7 @@ def create(loops:int,voice_num,gg):
 
     for i in range(loops):
 
-        mix = gg
+        mix = random.randint(9,13)
         x = np.zeros(problem_len)
         y = np.zeros(nb_voice)
 
