@@ -117,11 +117,15 @@ for i in range(44):
   """.format(i+1, i, i, i)
 
 ui += """
-    
   BoxLayout:
+    size_hint_y: 0.3
     StrongButton:
+      size_hint_x: 2
       text: "SOLVE"
       on_press: root.solve_problem_event.set()
+    Label:
+      id: ping
+      text: "-"
 
   # UIBottom
   BoxLayout:
@@ -227,6 +231,10 @@ class ProconUI(BoxLayout):
       try:
         await self.update_problem_event.wait()
         self.update_problem_event = trio.Event()
+
+        ## ping
+        ping_res = await get("/test")
+        self.ids.ping.text = "ping: " + ping_res.text
 
         res = await get_problem()
         self.problem_get_time = int(time())
