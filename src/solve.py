@@ -12,6 +12,7 @@ model_judge = []
 model_n = 88
 
 def initModel():
+  return
   model_judge.append(load_model(f'./train/voice_judge.h5'))
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
@@ -73,6 +74,13 @@ async def solve(f,stack_num):
         ans[p] += 1
 
   print('predict_finish')
+
+  str_len = []
+  for i in range(88):
+    str_len.append(str(i+1))
+
+  d = dict(zip(str_len, ans))
+  print(sorted(d.items()))
 
   print(ans)
   pre_ans = ans
