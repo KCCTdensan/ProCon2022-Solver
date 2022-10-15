@@ -88,14 +88,14 @@ async def solve(f,stack_num):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
 
     if i < 44 and pre_ans[i] >= loop - int(loop / 10):
-      str = '{:0=2}'.format((i + 1) % 44)
-      if str not in ans:
-        ans.append(str)
+      str_l = '{:0=2}'.format((i + 1) % 44)
+      if str_l not in ans:
+        ans.append(str_l)
 
     elif i >= 44 and pre_ans[i] >= loop - int(loop / 10):
-      str = '{:0=2}'.format((i) - 43)
-      if str not in ans:
-        ans.append(str)
+      str_l = '{:0=2}'.format((i) - 43)
+      if str_l not in ans:
+        ans.append(str_l)
 
   print(ans)
 
