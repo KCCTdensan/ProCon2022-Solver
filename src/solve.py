@@ -12,6 +12,7 @@ model_judge = []
 model_n = 88
 
 def initModel():
+  return
   model_judge.append(load_model(f'./train/voice_judge.h5'))
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
@@ -28,8 +29,6 @@ async def solve(f,stack_num):
   loop = int((voice_len - 20000) / 100)
   loop = 20
 
-  print(0)
-
   x_list = []
   for i in range(loop):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
@@ -42,7 +41,6 @@ async def solve(f,stack_num):
 
   x_list = tf.reshape(x_list,[loop,10000,1])
   print('problem_load_finish')
-  print(1)
 
   ans_judge = np.zeros(3)
   pre_judge = tf.round(model_judge[0].predict(x_list))
@@ -61,7 +59,6 @@ async def solve(f,stack_num):
   elif ans_judge[2] > ans_judge[0] and ans_judge[2] > ans_judge[1]:
     leng = range(44,88)
   print(leng)
-  print(2)
 
   ans = np.zeros(model_n)
   for p in leng:
@@ -77,11 +74,9 @@ async def solve(f,stack_num):
         ans[p] += 1
 
   print('predict_finish')
-  print(3)
 
   print(ans)
   pre_ans = ans
-  print(4)
   ans = []
   for i in leng:
     i = tf.convert_to_tensor(i, dtype=tf.int64)

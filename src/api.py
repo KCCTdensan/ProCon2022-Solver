@@ -69,20 +69,8 @@ async def get_wav(chunk_n):
   if res.status_code != httpx.codes.OK:
     raise
   name = res.json()["chunks"][chunk_n]
-  chunk = await get_chunk(name)
+  f = await get_chunk(name)
   print(f"{datetime.now()} [OK ] chunk {name} got successfully")
-
-  f = tempfile.NamedTemporaryFile()
-  with wave.open(f, "wb") as w:
-    with wave.open(chunk, "rb") as w_first:
-      w.setparams(w_first.getparams())
-      print(f"{datetime.now()} [OK ] setting wave params : {w_first.getparams()}")
-    chunk.seek(0)
-
-  chunk.close()
-
-  print(f"{datetime.now()} [OK ] wave generated : {f.name}")
-  f.seek(0)
   return f
 
 async def submit_problem(ans):
