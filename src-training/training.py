@@ -34,7 +34,7 @@ np.set_printoptions(edgeitems=10)
 max_voice_len = 95000
 data_x = np.empty(0)
 data_y = np.empty(0)
-nb_training = 100000
+nb_training =50000
 
 
 
@@ -83,7 +83,7 @@ for i in range(88):
             model.add(MaxPool1D(pool_size=2, padding='same'))
             model.add(Conv1D(32, 4, activation='relu'))
             model.add(MaxPool1D(pool_size=2, padding='same'))
-            model.add(LSTM(16, return_sequences=True))
+            model.add(LSTM(8, return_sequences=True))
             model.add(Flatten())
             model.add(Dense(2,activation='softmax'))
             model.compile(loss="binary_crossentropy", optimizer=Adam(lr=3e-3),metrics=['accuracy'])
@@ -97,15 +97,15 @@ for i in range(88):
     early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=3)
 
     lr_decay = LearningRateScheduler(step_decay)
-    history = model.fit(x_train, y_train, batch_size=128, epochs=20,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
+    history = model.fit(x_train, y_train, batch_size=128, epochs=7,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
 
     plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
     plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
     plt.xlabel("epoch")
     plt.legend()
     
-    plt.savefig(f"train/voice_correct_in{i}.png")
-    model.save(f"train/voice_correct_in{i}.h5")
+    plt.savefig(f"train_renew/voice_correct_in{i}.png")
+    model.save(f"train_renew/voice_correct_in{i}.h5")
 
     K.clear_session()
     gc.collect()
