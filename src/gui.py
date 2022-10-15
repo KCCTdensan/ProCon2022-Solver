@@ -333,6 +333,7 @@ class ProconUI(BoxLayout):
         for i in range(44):
           self.ids["label_{0}".format(i)].text = str(i+1)
           self.ids["label_{0}".format(i)].color = (.5,.5,.5,1)
+          self.ids["check_{0}".format(i)].state = "normal"
         print(self.submit_check)
 
 
@@ -363,7 +364,6 @@ class ProconUI(BoxLayout):
           self.ids["label_{0}".format(i)].color = (1,1,1,1)
 
         self.submit_check = [False for i in range(44)]
-        self.submit_check_obj.clear()
         self.clear_cheks()
         print("チェックボタンの無効化")
 
@@ -375,12 +375,11 @@ class ProconUI(BoxLayout):
         self.ids.server_res.text = "Answered: failed"
         print(f"{datetime.now()} [ERR] 問題の提出に失敗しました")
 
-        for checks in self.submit_check_obj:
-          checks.state = "normal"
-          checks.disabled = True
+        for i in range(44):
+          if self.submit_check[i]:
+            self.ids["check_{0}".format(i)].state = "normal"
+            self.ids["check_{0}".format(i)].disabled = True
 
-        # self.submit_check = []
-        self.submit_check_obj.clear()
         print("チェックボタンの無効化")
 
   def clear_cheks(self):
