@@ -12,7 +12,6 @@ model_judge = []
 model_n = 88
 
 def initModel():
-  return
   model_judge.append(load_model(f'./train/voice_judge.h5'))
   for i in range(model_n):
     i = tf.convert_to_tensor(i, dtype=tf.int64)
