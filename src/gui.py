@@ -131,10 +131,12 @@ ui += """
   BoxLayout:
     size_hint_y: 0.3
     BoxLayout:
+      size_hint_x: 0.5
       StrongButton:
         text: "-1"
         on_press: root.chunk_minus_event()
     BoxLayout
+      size_hint_x: 0.5
       StrongButton:
         text: "+1"
         on_press: root.chunk_plus_event()
@@ -335,11 +337,14 @@ class ProconUI(BoxLayout):
         res = await submit_problem(ans)
         print(f"{datetime.now()} [OK ] 問題を提出しました")
         # display result
+        self.ids.server_res.text = "Answered: " + str(res["answers"])
 
       except AnswerException:
+        self.ids.server_res.text = "Answered: invalid"
         print(f"{datetime.now()} [ERR] 回答の形式が不正です")
 
       except Exception:
+        self.ids.server_res.text = "Answered: failed"
         print(f"{datetime.now()} [ERR] 問題の提出に失敗しました")
 
 
@@ -362,4 +367,3 @@ class ProconUI(BoxLayout):
     self.submit_check[num] = checkbox.active
     print(self.submit_check[num])
     print(self.submit_check)
-
