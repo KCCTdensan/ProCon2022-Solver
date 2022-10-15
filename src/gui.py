@@ -302,8 +302,9 @@ class ProconUI(BoxLayout):
         for i in range(len(self.check)):
           for j in range(len(ans)):
             if int(ans[j]) == i+1:
-              self.check[i] = BooleanProperty(True)
-              self.submit_check[i] = True
+              #self.check[i] = BooleanProperty(True)
+              #self.submit_check[i] = True
+              pass
         print(f"{datetime.now()} [OK ] 問題を解きました : ", ans)
 
         # preview
