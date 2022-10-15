@@ -43,7 +43,7 @@ def create(loops:int,voice_num):
 
     for i in range(loops):
 
-        mix = random.randint(9,13)
+        mix = random.randint(9,12)
         x = np.zeros(problem_len)
         y = np.zeros(nb_voice)
 

@@ -2,7 +2,7 @@
 
 import os
 
-os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
+#os.add_dll_directory(os.path.join(os.environ['CUDA_PATH'], 'bin'))
 
 import tensorflow as tf
 
@@ -97,7 +97,7 @@ for i in range(88):
     early_stopping =  EarlyStopping(monitor='val_loss',min_delta=0.0,patience=3)
 
     lr_decay = LearningRateScheduler(step_decay)
-    history = model.fit(x_train, y_train, batch_size=128, epochs=20,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
+    history = model.fit(x_train, y_train, batch_size=128, epochs=7,verbose=1,validation_data=(x_valid, y_valid),callbacks=[early_stopping,lr_decay])
 
     plt.plot(history.epoch, history.history["accuracy"], label="Train accracy")
     plt.plot(history.epoch, history.history["val_accuracy"], label="Validation accracy")
